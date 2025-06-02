@@ -18,9 +18,9 @@ const Sidebar = () => {
   const [activeMenu, setActiveMenu] = useState("");
 
   const menuItems = [
-    { name: "Premium Ads", icon: <FaAd />, path: "/" },
+    { name: "Premium Ads", icon: <FaAd />, path: "/PremiumAds" },
     { name: "Carousel Ads", icon: <FaImages /> },
-    { name: "Hostels", icon: <FaBed />, path: "/Hostel" },
+    { name: "Hostels", icon: <FaBed />, path: "/hostel" },
     { name: "Hotels", icon: <FaHotel /> },
     { name: "Users", icon: <FaUsers /> },
     { name: "Skilled Directories", icon: <FaBriefcase /> },
