@@ -11,6 +11,7 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Premium Ads", icon: <FaAd />, path: "/" },
     { name: "Carousel Ads", icon: <FaImages /> },
-    { name: "Hostels", icon: <FaBed /> ,path: "/Hostel"},
+    { name: "Hostels", icon: <FaBed />, path: "/Hostel" },
     { name: "Hotels", icon: <FaHotel /> },
     { name: "Users", icon: <FaUsers /> },
     { name: "Skilled Directories", icon: <FaBriefcase /> },
@@ -55,18 +56,19 @@ const Sidebar = () => {
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.name}>
-                <button
+                <Link
+                  to={item.path}
                   onClick={() => setActiveMenu(item.name)}
                   className={`w-full flex items-center space-x-4 p-3 rounded-lg transition-all duration-200 
-                    ${
-                      activeMenu === item.name
-                        ? "bg-white text-blue-700 font-semibold shadow-inner"
-                        : "text-gray-200 hover:bg-blue-800 hover:text-white"
-                    }`}
+        ${
+          activeMenu === item.name
+            ? "bg-white text-blue-700 font-semibold shadow-inner"
+            : "text-gray-200 hover:bg-blue-800 hover:text-white"
+        }`}
                 >
                   <span className="text-lg">{item.icon}</span>
                   <span className="text-base">{item.name}</span>
-                </button>
+                </Link>
               </li>
             ))}
           </ul>
