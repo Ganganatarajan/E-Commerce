@@ -19,7 +19,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Premium Ads", icon: <FaAd />, path: "/" },
     { name: "Carousel Ads", icon: <FaImages /> },
-    { name: "Hostels", icon: <FaBed /> },
+    { name: "Hostels", icon: <FaBed /> ,path: "/Hostel"},
     { name: "Hotels", icon: <FaHotel /> },
     { name: "Users", icon: <FaUsers /> },
     { name: "Skilled Directories", icon: <FaBriefcase /> },
