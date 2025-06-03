@@ -10,6 +10,7 @@ import Hotel from "../pages/Hotel/Hotel";
 import HotelForm from "../pages/Hotel/HotelForm";
 import User from "../pages/User/User";
 import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
+import JobsTable from "../pages/Jobs/Jobs";
 
 const AllRoutes = () => {
   return (
@@ -25,6 +26,7 @@ const AllRoutes = () => {
         <Route path="hotel/add" element={<HotelForm />} />
         <Route path="User" element={<User />} />
         <Route path="SkilledDirectors" element={<SkilledDirectors />} />
+        <Route path="jobs" element={<JobsTable />} />
       </Route>
     </Routes>
   );

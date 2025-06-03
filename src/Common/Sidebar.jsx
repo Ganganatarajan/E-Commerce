@@ -22,9 +22,13 @@ const Sidebar = () => {
     { name: "Carousel Ads", icon: <FaImages />, path: "/CarouselAds" },
     { name: "Hostels", icon: <FaBed />, path: "/hostel" },
     { name: "Hotels", icon: <FaHotel />, path: "/hotel" },
-    { name: "Users", icon: <FaUsers />, path: "/User"},
-    { name: "SkilledDirectors", icon: <FaBriefcase />, path: "/SkilledDirectors" },
-    { name: "Jobs", icon: <FaUserTie /> },
+    { name: "Users", icon: <FaUsers />, path: "/User" },
+    {
+      name: "SkilledDirectors",
+      icon: <FaBriefcase />,
+      path: "/SkilledDirectors",
+    },
+    { name: "Jobs", icon: <FaUserTie />, path: "/jobs" },
     { name: "Admins", icon: <FaUserCog /> },
   ];
 
