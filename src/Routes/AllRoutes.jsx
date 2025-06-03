@@ -4,6 +4,8 @@ import Hostel from "../pages/Hostel/Hostel";
 import HostelForm from "../pages/Hostel/HostelForm";
 import PremiumTable from "../pages/PremiumAds/PremiumTable";
 import PremiumForm from "../pages/PremiumAds/PremiumForm";
+import User from "../pages/User/User";
+import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 
 const AllRoutes = () => {
   return (
@@ -13,6 +15,8 @@ const AllRoutes = () => {
         <Route path="hostel/add" element={<HostelForm />} />
         <Route path="PremiumAds" element={<PremiumTable />} />
         <Route path="PremiumAds/Add" element={<PremiumForm />} />
+        <Route path="User" element={<User />} />
+        <Route path="SkilledDirectors" element={<SkilledDirectors />} />
       </Route>
     </Routes>
   );

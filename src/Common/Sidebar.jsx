@@ -22,8 +22,8 @@ const Sidebar = () => {
     { name: "Carousel Ads", icon: <FaImages /> },
     { name: "Hostels", icon: <FaBed />, path: "/hostel" },
     { name: "Hotels", icon: <FaHotel /> },
-    { name: "Users", icon: <FaUsers /> },
-    { name: "Skilled Directories", icon: <FaBriefcase /> },
+    { name: "Users", icon: <FaUsers />, path: "/User"},
+    { name: "SkilledDirectors", icon: <FaBriefcase />, path: "/SkilledDirectors" },
     { name: "Jobs", icon: <FaUserTie /> },
     { name: "Admins", icon: <FaUserCog /> },
   ];
