@@ -19,9 +19,9 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Premium Ads", icon: <FaAd />, path: "/PremiumAds" },
-    { name: "Carousel Ads", icon: <FaImages /> },
+    { name: "Carousel Ads", icon: <FaImages />, path: "/CarouselAds" },
     { name: "Hostels", icon: <FaBed />, path: "/hostel" },
-    { name: "Hotels", icon: <FaHotel /> },
+    { name: "Hotels", icon: <FaHotel />, path: "/hotel" },
     { name: "Users", icon: <FaUsers /> },
     { name: "Skilled Directories", icon: <FaBriefcase /> },
     { name: "Jobs", icon: <FaUserTie /> },
