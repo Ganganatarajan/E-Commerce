@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
 const SkilledDirectors = () => {
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(2);
   const [directors, setDirectors] = useState([
     {
       id: 1,
@@ -28,6 +31,29 @@ const SkilledDirectors = () => {
     }
   ]);
 
+  const filteredData = directors.filter((item) =>
+    [item.name, item.email, item.mobileNumber].some((field) =>
+      field.toLowerCase().includes(search.toLowerCase())
+    )
+  );
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handleRowsChange = (e) => {
+    setRowsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
   const toggleVerified = (id) => {
     setDirectors(directors.map(director => 
       director.id === id ? { ...director, verified: !director.verified } : director
@@ -36,12 +62,40 @@ const SkilledDirectors = () => {
 
   const deleteDirector = (id) => {
     setDirectors(directors.filter(director => director.id !== id));
+    // Reset to first page if the deletion affects the current page
+    if (currentData.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Skilled Directors</h1>
+        <div className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="text"
+            placeholder="Search by name, mailid, phnnumber"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border border-gray-300 rounded-lg px-4 py-1 w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+          />
+
+          <select
+            id="rowsPerPage"
+            value={rowsPerPage}
+            onChange={handleRowsChange}
+            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          >
+            {[2, 5, 10, 15, 20].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -59,9 +113,9 @@ const SkilledDirectors = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {directors.map((director, index) => (
+              {currentData.map((director, index) => (
                 <tr key={director.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{startIndex + index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{director.name}</div>
                   </td>
@@ -109,6 +163,48 @@ const SkilledDirectors = () => {
           </table>
         </div>
       </div>
+      
+      {filteredData.length > 0 && totalPages > 1 && (
+        <div className="flex justify-end mt-2 items-center space-x-2 p-4">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className={`px-2 py-1 rounded-lg border text-sm font-medium ${
+              currentPage === 1
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-700 hover:bg-purple-100"
+            }`}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-2 py-1 rounded-lg text-sm font-medium border ${
+                page === currentPage
+                  ? "bg-purple-700 text-white px-2 py-1"
+                  : "bg-white text-gray-700 hover:bg-purple-100 px-2 py-1 "
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className={`px-2 py-1 rounded-lg border text-sm font-medium ${
+              currentPage === totalPages
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-700 hover:bg-purple-100"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

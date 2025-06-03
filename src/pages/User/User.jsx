@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
 const User = () => {
+        const [search, setSearch] = useState("");
+        const [currentPage, setCurrentPage] = useState(1);
+        const [rowsPerPage, setRowsPerPage] = useState(2);
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -22,6 +25,29 @@ const User = () => {
     }
   ]);
 
+const filteredData = users.filter((item) =>
+  [item.name, item.email, item.mobileNumber].some((field) =>
+    field.toLowerCase().includes(search.toLowerCase())
+  )
+);
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handleRowsChange = (e) => {
+    setRowsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
   const deleteUser = (id) => {
     setUsers(users.filter(user => user.id !== id));
   };
@@ -29,7 +55,31 @@ const User = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Users Management</h1>
+            <div className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="text"
+            placeholder="Search by name, mailid, phnnumber"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1); // Reset to first page when searching
+            }}
+            className="border border-gray-300 rounded-lg px-4 py-1 w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+          />
+
+          <select
+            id="rowsPerPage"
+            value={rowsPerPage}
+            onChange={handleRowsChange}
+            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          >
+            {[5, 10, 15, 20].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -45,30 +95,72 @@ const User = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user, index) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.mobileNumber}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button 
-                      onClick={() => deleteUser(user.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {currentData.map((user, index) => (
+    <tr key={user.id} className="hover:bg-gray-50">
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        {(currentPage - 1) * rowsPerPage + index + 1}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <div className="text-sm font-medium text-gray-900">{user.name}</div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.mobileNumber}</td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        <button
+          onClick={() => deleteUser(user.id)}
+          className="text-red-600 hover:text-red-900"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       </div>
+      {/* Professional Pagination */}
+      {filteredData.length > 0 && totalPages > 1 && (
+        <div className="flex justify-end mt-2 items-center space-x-2 p-4">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className={`px-2 py-1 rounded-lg border text-sm font-medium ${currentPage === 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-purple-100"
+              }`}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-2 py-1 rounded-lg text-sm font-medium border ${page === currentPage
+                ? "bg-purple-700 text-white px-2 py-1"
+                : "bg-white text-gray-700 hover:bg-purple-100 px-2 py-1 "
+                }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className={`px-2 py-1 rounded-lg border text-sm font-medium ${currentPage === totalPages
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-purple-100"
+              }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

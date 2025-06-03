@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Hotel = () => {
+    const [search, setSearch] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(2);
   const navigate = useNavigate();
   const [hotels, setHotels] = useState([
     {
@@ -22,7 +25,57 @@ const Hotel = () => {
       area: "Downtown",
       verified: false,
     },
+    {
+      id: 3,
+      hotelName: "Sunshine Residency",
+      contactPerson: "Jane Smith",
+      mobileNumber: "8765432109",
+      city: "Los Angeles",
+      area: "Downtown",
+      verified: false,
+    },
+    {
+      id: 4,
+      hotelName: "Sunshine Residency",
+      contactPerson: "Jane Smith",
+      mobileNumber: "8765432109",
+      city: "Los Angeles",
+      area: "Downtown",
+      verified: false,
+    },
+    {
+      id: 5,
+      hotelName: "Sunshine Residency",
+      contactPerson: "Jane Smith",
+      mobileNumber: "8765432109",
+      city: "Los Angeles",
+      area: "Downtown",
+      verified: false,
+    },
   ]);
+
+  const filteredData = hotels.filter((item) =>
+    [item.hotelName, item.contactPerson, item.mobileNumber, item.city, item.area].some((field) =>
+      field && field.toString().toLowerCase().includes(search.toLowerCase())
+    )
+  );
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handleRowsChange = (e) => {
+    setRowsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
 
   const toggleVerified = (id) => {
     setHotels(
@@ -43,7 +96,31 @@ const Hotel = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Hotel Management</h1>
+        <div className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="text"
+            placeholder="Search by name, phone, city, or area"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1); // Reset to first page when searching
+            }}
+            className="border border-gray-300 rounded-lg px-4 py-1 w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+          />
+
+          <select
+            id="rowsPerPage"
+            value={rowsPerPage}
+            onChange={handleRowsChange}
+            className="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          >
+            {[5, 10, 15, 20].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
         <button
           onClick={navigateToAdd}
           className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-300 flex items-center"
@@ -120,11 +197,11 @@ const Hotel = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {hotels.map((hotel, index) => (
+             {currentData.map((hotel, index) => (
                 <tr key={hotel.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {index + 1}
-                  </td>
+                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        {(currentPage - 1) * rowsPerPage + index + 1}
+      </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
                       {hotel.hotelName}
@@ -206,6 +283,45 @@ const Hotel = () => {
           </table>
         </div>
       </div>
+          {/* Professional Pagination */}
+      {filteredData.length > 0 && totalPages > 1 && (
+        <div className="flex justify-end mt-2 items-center space-x-2 p-4">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className={`px-2 py-1 rounded-lg border text-sm font-medium ${currentPage === 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-purple-100"
+              }`}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-2 py-1 rounded-lg text-sm font-medium border ${page === currentPage
+                ? "bg-purple-700 text-white px-2 py-1"
+                : "bg-white text-gray-700 hover:bg-purple-100 px-2 py-1 "
+                }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className={`px-2 py-1 rounded-lg border text-sm font-medium ${currentPage === totalPages
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-purple-100"
+              }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
