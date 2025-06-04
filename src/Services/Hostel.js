@@ -63,7 +63,7 @@ export const createHostel = async (data) => {
 };
 
 
-export const GetHotel = async () => {
+export const GetHostel = async () => {
   const response = await apiInstance.get('hostel/get-all');
   return response;
 }

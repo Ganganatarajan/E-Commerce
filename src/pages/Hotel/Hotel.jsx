@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-
+import { GetHotel } from "../../Services/Hotel";
 const Hotel = () => {
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(2);
+    const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [hotels, setHotels] = useState([
     {
@@ -92,6 +93,19 @@ const Hotel = () => {
   const navigateToAdd = () => {
     navigate("/hotel/add");
   };
+
+    const getHotel = async() =>{
+        try {
+          const res = await GetHotel();
+          console.log(res.data,'get hotel')
+        } catch (error) {
+          console.error(error)
+        }
+      };
+    
+      useEffect(()=>{
+        getHotel();
+      },[])
 
   return (
     <div className="container mx-auto px-4 py-8">

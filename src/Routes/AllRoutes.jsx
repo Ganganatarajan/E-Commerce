@@ -11,6 +11,8 @@ import HotelForm from "../pages/Hotel/HotelForm";
 import User from "../pages/User/User";
 import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 import JobsTable from "../pages/Jobs/Jobs";
+import Admins from "../pages/Admins/Admins"
+import AdminsForm from "../pages/Admins/AdminsForm"
 import EditHostelForm from "../pages/Hostel/EditHostel";
 
 const AllRoutes = () => {
@@ -28,8 +30,6 @@ const AllRoutes = () => {
         <Route path="User" element={<User />} />
         <Route path="SkilledDirectors" element={<SkilledDirectors />} />
         <Route path="jobs" element={<JobsTable />} />
-        <Route path="/hostel/get/:id" element={<EditHostelForm />} />
-
       </Route>
     </Routes>
   );

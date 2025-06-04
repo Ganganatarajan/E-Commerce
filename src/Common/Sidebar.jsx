@@ -29,7 +29,7 @@ const Sidebar = () => {
       path: "/SkilledDirectors",
     },
     { name: "Jobs", icon: <FaUserTie />, path: "/jobs" },
-    { name: "Admins", icon: <FaUserCog /> },
+    { name: "Admins", icon: <FaUserCog /> ,path:"/Admins"},
   ];
 
   const toggleSidebar = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createHostel } from "../../Services/Hostel";
 import { message } from "antd";
@@ -36,6 +36,8 @@ const HostelForm = () => {
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
+ 
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
