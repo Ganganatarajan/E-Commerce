@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const amenitiesList = [
@@ -25,6 +25,8 @@ const HostelForm = () => {
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
+ 
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,12 +62,19 @@ const HostelForm = () => {
     setImagePreviews(previews);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log('Form submitted:', formData);
-    navigate('/hostel');
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const result = await addHostel(formData);
+    console.log('Hostel added successfully', result);
+    navigate('/hostel'); // or wherever you want to go
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert("Something went wrong. Please try again.");
+  }
+};
+
 
   const handleReset = () => {
     setFormData({

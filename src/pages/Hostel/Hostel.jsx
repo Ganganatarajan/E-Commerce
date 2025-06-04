@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GetHostel } from '../../Services/Hostel';
 
 const Hostel = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(2);
   const navigate = useNavigate();
+   const [data, setData] = useState([]);
+  
+    const getHostel = async() =>{
+      try {
+        const res = await GetHostel();
+        console.log(res.data,'get hostel')
+      } catch (error) {
+        console.error(error)
+      }
+    };
+  
+    useEffect(()=>{
+      getHostel();
+    },[])
 
   const [hostels, setHostels] = useState([
     {
