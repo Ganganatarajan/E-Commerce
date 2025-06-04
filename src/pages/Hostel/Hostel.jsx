@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DeleteHostel } from '../../Services/Hostel';
 
 const Hostel = () => {
   const [search, setSearch] = useState("");
@@ -84,9 +85,17 @@ const Hostel = () => {
     ));
   };
 
-  const deleteHostel = (id) => {
-    setHostels(hostels.filter(hostel => hostel.id !== id));
-  };
+  const deleteHostel = async(id) => {
+    try {
+      const response= await DeleteHostel(id);
+      console.log(response,'Delete Successfuly');
+      
+    } catch (error) {
+      console.error(error);
+      
+    }
+
+  }
 
   const navigateToAdd = () => {
     navigate('/hostel/add');

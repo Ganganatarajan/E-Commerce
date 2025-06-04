@@ -13,6 +13,8 @@ import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 import JobsTable from "../pages/Jobs/Jobs";
 import Admins from "../pages/Admins/Admins"
 import AdminsForm from "../pages/Admins/AdminsForm"
+import ViewAdmin from '../pages/Admins/ViewAdmin';
+
 
 const AllRoutes = () => {
   return (
@@ -31,6 +33,7 @@ const AllRoutes = () => {
         <Route path="jobs" element={<JobsTable />} />
         <Route path="Admins" element={<Admins />} />
         <Route path="Admins/add" element={<AdminsForm />} />
+        <Route path="/Admins/view/:id" element={<ViewAdmin />} />
 
       </Route>
     </Routes>
