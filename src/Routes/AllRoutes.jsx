@@ -13,6 +13,7 @@ import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 import JobsTable from "../pages/Jobs/Jobs";
 import Admins from "../pages/Admins/Admins"
 import AdminsForm from "../pages/Admins/AdminsForm"
+import EditHostelForm from "../pages/Hostel/EditHostel";
 import ViewAdmin from '../pages/Admins/ViewAdmin';
 
 
