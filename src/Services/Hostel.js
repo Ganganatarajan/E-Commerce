@@ -1,11 +1,7 @@
 
-import apiInstance from '../interceptors/axios';
 
 
-export const GetHotel = async() =>{
-    const response = await apiInstance.get('hostel/get-all');
-    return response;
-}
+
 
 // import apiInstance from "../interceptors/axios";
 // import { message } from "antd";
@@ -22,9 +18,8 @@ export const GetHotel = async() =>{
 //   }
 // };
 
+import apiInstance from '../interceptors/axios';
 
-
-import apiInstance from "../interceptors/axios";
 import { message } from "antd";
 
 export const createHostel = async (data) => {
@@ -65,4 +60,21 @@ export const createHostel = async (data) => {
     message.error("Hostel creation failed.");
     throw err;
   }
+};
+
+
+export const GetHotel = async () => {
+  const response = await apiInstance.get('hostel/get-all');
+  return response;
+}
+
+
+export const getHostelById = async (id) => {
+  const res = await apiInstance.get(`http://localhost:7055/v1/hostel/get/${id}`);
+  return res.data;
+};
+
+export const updateHostel = async (id, data) => {
+  const res = await apiInstance.put(`http://localhost:7055/v1/hostel/update/${id}`, data);
+  return res.data;
 };

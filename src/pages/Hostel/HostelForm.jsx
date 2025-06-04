@@ -1,27 +1,38 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createHostel } from "../../Services/Hostel";
+import { message } from "antd";
 
 const amenitiesList = [
-  "Wi-Fi", "AC", "Laundry", "Food", "Parking", "Security", "Gym", 
-  "Study Room", "TV", "Hot Water", "Cleaning"
+  "Wi-Fi",
+  "AC",
+  "Laundry",
+  "Food",
+  "Parking",
+  "Security",
+  "Gym",
+  "Study Room",
+  "TV",
+  "Hot Water",
+  "Cleaning",
 ];
 
 const HostelForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    hostelName: '',
-    noOfRooms: '',
-    noOfOccupancies: '',
-    contactPerson: '',
-    mobileNumber: '',
-    mailId: '',
-    address: '',
-    city: '',
-    area: '',
-    pincode: '',
-    locationLink: '',
+    hostelName: "",
+    noOfRooms: "",
+    noOfOccupancies: "",
+    contactPerson: "",
+    mobileNumber: "",
+    mailId: "",
+    address: "",
+    city: "",
+    area: "",
+    pincode: "",
+    locationLink: "",
     hostelImages: [],
-    amenities: []
+    amenities: [],
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -30,7 +41,7 @@ const HostelForm = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -39,12 +50,12 @@ const HostelForm = () => {
     if (checked) {
       setFormData({
         ...formData,
-        amenities: [...formData.amenities, value]
+        amenities: [...formData.amenities, value],
       });
     } else {
       setFormData({
         ...formData,
-        amenities: formData.amenities.filter(item => item !== value)
+        amenities: formData.amenities.filter((item) => item !== value),
       });
     }
   };
@@ -53,35 +64,41 @@ const HostelForm = () => {
     const files = Array.from(e.target.files).slice(0, 5);
     setFormData({
       ...formData,
-      hostelImages: files
+      hostelImages: files,
     });
-    
-    const previews = files.map(file => URL.createObjectURL(file));
+
+    const previews = files.map((file) => URL.createObjectURL(file));
     setImagePreviews(previews);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log('Form submitted:', formData);
-    navigate('/hostel');
+    try {
+      const res = await createHostel(formData);
+      console.log("Form submitted:", res);
+      message.success("Hostel created successfully!");
+      navigate("/hostel"); // Redirect only if API success
+    } catch (err) {
+      console.error("Create Hostel Error:", err);
+      message.error("Failed to create hostel.");
+    }
   };
 
   const handleReset = () => {
     setFormData({
-      hostelName: '',
-      noOfRooms: '',
-      noOfOccupancies: '',
-      contactPerson: '',
-      mobileNumber: '',
-      mailId: '',
-      address: '',
-      city: '',
-      area: '',
-      pincode: '',
-      locationLink: '',
+      hostelName: "",
+      noOfRooms: "",
+      noOfOccupancies: "",
+      contactPerson: "",
+      mobileNumber: "",
+      mailId: "",
+      address: "",
+      city: "",
+      area: "",
+      pincode: "",
+      googleMapLink: "",
       hostelImages: [],
-      amenities: []
+      amenities: [],
     });
     setImagePreviews([]);
   };
@@ -90,21 +107,37 @@ const HostelForm = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-8">
-          <button 
-            onClick={() => navigate('/hostel')}
+          <button
+            onClick={() => navigate("/hostel")}
             className="mr-4 text-gray-600 hover:text-gray-900"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
           </button>
           <h1 className="text-3xl font-bold text-gray-800">Add New Hostel</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl shadow-md p-6"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Hostel Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Hostel Name
+              </label>
               <input
                 type="text"
                 name="hostelName"
@@ -115,7 +148,9 @@ const HostelForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">No. of Rooms</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                No. of Rooms
+              </label>
               <input
                 type="number"
                 name="noOfRooms"
@@ -129,7 +164,9 @@ const HostelForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">No. of Occupancies</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                No. of Occupancies
+              </label>
               <input
                 type="number"
                 name="noOfOccupancies"
@@ -140,7 +177,9 @@ const HostelForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Contact Person
+              </label>
               <input
                 type="text"
                 name="contactPerson"
@@ -154,7 +193,9 @@ const HostelForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mobile Number
+              </label>
               <input
                 type="tel"
                 name="mobileNumber"
@@ -165,7 +206,9 @@ const HostelForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mail ID</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mail ID
+              </label>
               <input
                 type="email"
                 name="mailId"
@@ -178,7 +221,9 @@ const HostelForm = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Address
+            </label>
             <textarea
               name="address"
               value={formData.address}
@@ -191,7 +236,9 @@ const HostelForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                City
+              </label>
               <input
                 type="text"
                 name="city"
@@ -202,7 +249,9 @@ const HostelForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Area</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Area
+              </label>
               <input
                 type="text"
                 name="area"
@@ -213,7 +262,9 @@ const HostelForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Pincode
+              </label>
               <input
                 type="text"
                 name="pincode"
@@ -226,11 +277,13 @@ const HostelForm = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Location - Google Map Link</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Location - Google Map Link
+            </label>
             <input
               type="url"
-              name="locationLink"
-              value={formData.locationLink}
+              name="googleMapLink"
+              value={formData.googleMapLink}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               required
@@ -238,7 +291,9 @@ const HostelForm = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hostel Images (Up to 5)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Hostel Images (Up to 5)
+            </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
               <div className="space-y-1 text-center">
                 <div className="flex text-sm text-gray-600">
@@ -266,9 +321,9 @@ const HostelForm = () => {
               <div className="mt-4 flex flex-wrap gap-4">
                 {imagePreviews.map((preview, index) => (
                   <div key={index} className="relative">
-                    <img 
-                      src={preview} 
-                      alt={`Preview ${index}`} 
+                    <img
+                      src={preview}
+                      alt={`Preview ${index}`}
                       className="h-32 w-32 object-cover rounded-lg"
                     />
                   </div>
@@ -278,9 +333,11 @@ const HostelForm = () => {
           </div>
 
           <div className="mb-8">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Amenities</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Amenities
+            </label>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {amenitiesList.map(amenity => (
+              {amenitiesList.map((amenity) => (
                 <div key={amenity} className="flex items-center">
                   <input
                     id={`amenity-${amenity}`}
@@ -290,7 +347,10 @@ const HostelForm = () => {
                     onChange={handleAmenityChange}
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                   />
-                  <label htmlFor={`amenity-${amenity}`} className="ml-2 text-sm text-gray-700">
+                  <label
+                    htmlFor={`amenity-${amenity}`}
+                    className="ml-2 text-sm text-gray-700"
+                  >
                     {amenity}
                   </label>
                 </div>
