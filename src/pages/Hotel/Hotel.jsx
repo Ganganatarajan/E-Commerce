@@ -338,7 +338,6 @@ const Hotel = () => {
           </table>
         </div>
       </div>
-      {/* Professional Pagination */}
       {filteredData.length > 0 && totalPages > 1 && (
         <div className="flex justify-end mt-2 items-center space-x-2 p-4">
           <button
@@ -387,7 +386,6 @@ const Hotel = () => {
             ref={modalRef}
             className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
           >
-            {/* Image Gallery */}
             <div className="relative h-72 bg-gray-100">
               {selectedHotel.hotelImages &&
               selectedHotel.hotelImages.length > 0 ? (
@@ -433,7 +431,6 @@ const Hotel = () => {
               )}
             </div>
 
-            {/* Content */}
             <div className="p-6 overflow-y-auto">
               <div className="flex justify-between items-start mb-6">
                 <div>
