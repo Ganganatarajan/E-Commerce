@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GetHostel } from '../../Services/Hostel';
-import { DeleteHostel } from '../../Services/Hostel';
+import { GetHostel,deleteHostel} from '../../Services/Hostel';
 
 const Hostel = () => {
   const [search, setSearch] = useState("");
@@ -111,7 +110,7 @@ const Hostel = () => {
 
   const deleteHostel = async(id) => {
     try {
-      const response= await DeleteHostel(id);
+      const response= await deleteHostel(id);
       console.log(response,'Delete Successfuly');
       
     } catch (error) {

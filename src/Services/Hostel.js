@@ -78,3 +78,8 @@ export const updateHostel = async (id, data) => {
   const res = await apiInstance.put(`http://localhost:7055/v1/hostel/update/${id}`, data);
   return res.data;
 };
+
+export const deleteHostel = async (id) => {
+  const res = await apiInstance.delete(`http://localhost:7055/v1/hostel/delete/${id}`);
+  return res.data;
+};
