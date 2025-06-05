@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiMapPin, FiPhone } from "react-icons/fi";
 
 const data = [
   {
@@ -58,54 +59,14 @@ const data = [
     city: "Seattle",
     area: "Capitol Hill",
   },
-  {
-    id: 8,
-    name: "City Comfort",
-    phone: "2109876543",
-    city: "Seattle",
-    area: "Capitol Hill",
-  },
-  {
-    id: 8,
-    name: "City Comfort",
-    phone: "2109876543",
-    city: "Seattle",
-    area: "Capitol Hill",
-  },
-  {
-    id: 8,
-    name: "City Comfort",
-    phone: "2109876543",
-    city: "Seattle",
-    area: "Capitol Hill",
-  },
-  {
-    id: 8,
-    name: "City Comfort",
-    phone: "2109876543",
-    city: "Seattle",
-    area: "Capitol Hill",
-  },
-  {
-    id: 8,
-    name: "City Comfort",
-    phone: "2109876543",
-    city: "Seattle",
-    area: "Capitol Hill",
-  },
-  {
-    id: 8,
-    name: "City Comfort",
-    phone: "2109876543",
-    city: "Seattle",
-    area: "Capitol Hill",
-  },
+  ,
 ];
 
 const PremiumTable = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selectedHostel, setSelectedHostel] = useState(false);
 
   const navigate = useNavigate();
 
@@ -194,7 +155,10 @@ const PremiumTable = () => {
                   <td className="px-4 py-4">{item.area}</td>
                   <td className="px-4 py-4">
                     <div className="flex justify-center gap-3 text-lg">
-                      <button className="text-blue-600 hover:text-blue-800">
+                      <button
+                        className="text-blue-600 hover:text-blue-800"
+                        onClick={() => setSelectedHostel(item)}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-5 w-5"
@@ -291,6 +255,44 @@ const PremiumTable = () => {
           >
             Next
           </button>
+        </div>
+      )}
+      {selectedHostel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
+          <div className="flex bg-white rounded-xl shadow-lg max-w-4xl w-[60%] overflow-hidden relative">
+            <div className="w-1/2 h-full hidden md:block">
+              <img
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+                alt="hostel"
+                className="h-[500px]  w-full object-cover"
+              />
+            </div>
+
+            <div className="w-full md:w-1/2 p-6 space-y-4">
+              <div className="text-xl font-bold">{selectedHostel.name}</div>
+              <span className="text-sm font-medium bg-gray-100 text-gray-800 px-2.5 py-0.5 rounded-full">
+                Hostel
+              </span>
+              <div>
+                <div className="w-full h-px bg-gray-300 mt-2" />
+                <p className="text-sm  mt-4">Location</p>
+                <p className="font-medium">
+                  {selectedHostel.area}, {selectedHostel.city}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm ">Contact</p>
+                <p className="font-medium">{selectedHostel.phone}</p>
+              </div>
+            </div>
+
+            <button
+              className="absolute top-3 right-3  hover:text-red-500"
+              onClick={() => setSelectedHostel(null)}
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
     </div>

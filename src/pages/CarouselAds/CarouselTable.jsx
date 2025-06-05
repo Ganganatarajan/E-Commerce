@@ -207,40 +207,6 @@ const CarouselTable = () => {
         </table>
       </div>
 
-      {selectedHostel && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-md relative">
-            <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
-            <div className="flex flex-col items-center gap-4 text-center">
-              <img
-                src={`https://source.unsplash.com/featured/300x200/?hostel,${selectedHostel.city}`}
-                alt={selectedHostel.name}
-                className="rounded-xl w-full h-48 object-cover"
-              />
-              <h2 className="text-xl font-bold text-purple-800">
-                {selectedHostel.name}
-              </h2>
-              <div className="text-gray-600 space-y-1">
-                <p>
-                  <strong>📞 Phone:</strong> {selectedHostel.phone}
-                </p>
-                <p>
-                  <strong>🏙️ City:</strong> {selectedHostel.city}
-                </p>
-                <p>
-                  <strong>📍 Area:</strong> {selectedHostel.area}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Professional Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-end mt-6 items-center space-x-2">
@@ -281,6 +247,44 @@ const CarouselTable = () => {
           >
             Next
           </button>
+        </div>
+      )}
+      {selectedHostel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
+          <div className="flex bg-white rounded-xl shadow-lg max-w-4xl w-[60%] overflow-hidden relative">
+            <div className="w-1/2 h-full hidden md:block">
+              <img
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+                alt="hostel"
+                className="h-[500px]  w-full object-cover"
+              />
+            </div>
+
+            <div className="w-full md:w-1/2 p-6 space-y-4">
+              <div className="text-xl font-bold">{selectedHostel.name}</div>
+              <span className="text-sm font-medium bg-gray-100 text-gray-800 px-2.5 py-0.5 rounded-full">
+                Hostel
+              </span>
+              <div>
+                <div className="w-full h-px bg-gray-300 mt-2" />
+                <p className="text-sm  mt-4">Location</p>
+                <p className="font-medium">
+                  {selectedHostel.area}, {selectedHostel.city}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm ">Contact</p>
+                <p className="font-medium">{selectedHostel.phone}</p>
+              </div>
+            </div>
+
+            <button
+              className="absolute top-3 right-3  hover:text-red-500"
+              onClick={() => setSelectedHostel(null)}
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
     </div>
