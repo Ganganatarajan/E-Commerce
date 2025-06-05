@@ -13,6 +13,9 @@ import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 import JobsTable from "../pages/Jobs/Jobs";
 import EditHostelForm from "../pages/Hostel/EditHostel"
 import ViewAdmin from '../pages/Admins/ViewAdmin';
+import Admins from "../pages/Admins/Admins";
+import AdminsForm from "../pages/Admins/AdminsForm";
+// import EditAdmin from '../pages/Admins/EditAdmin';
 
 
 const AllRoutes = () => {
@@ -35,6 +38,7 @@ const AllRoutes = () => {
         <Route path="Admins" element={<Admins />} />
         <Route path="Admins/add" element={<AdminsForm />} />
         <Route path="/Admins/view/:id" element={<ViewAdmin />} />
+        {/* <Route path="/Admins/edit/:id" element={<EditAdmin />} /> */}
 
       </Route>
     </Routes>
