@@ -13,6 +13,9 @@ import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 import JobsTable from "../pages/Jobs/Jobs";
 import EditHostelForm from "../pages/Hostel/EditHostel"
 import ViewAdmin from '../pages/Admins/ViewAdmin';
+import Admins from '../pages/Admins/ViewAdmin';
+import AdminsForm from '../pages/Admins/ViewAdmin';
+
 
 
 const AllRoutes = () => {
