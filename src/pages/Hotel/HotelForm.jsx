@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CreateHotel } from "../../Services/Hotel";
+import { message } from "antd";
 
 const amenitiesList = [
   "Wi-Fi",
@@ -19,8 +21,8 @@ const HotelForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     hotelName: "",
-    noOfRooms: "",
-    noOfOccupancies: "",
+    numberOfRooms: "",
+    numberOfOccupancies: "",
     contactPerson: "",
     mobileNumber: "",
     mailId: "",
@@ -28,7 +30,7 @@ const HotelForm = () => {
     city: "",
     area: "",
     pincode: "",
-    locationLink: "",
+    googleMapLink: "",
     hotelImages: [],
     amenities: [],
   });
@@ -37,50 +39,64 @@ const HotelForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAmenityChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setFormData({
-        ...formData,
-        amenities: [...formData.amenities, value],
-      });
-    } else {
-      setFormData({
-        ...formData,
-        amenities: formData.amenities.filter((item) => item !== value),
-      });
-    }
+    setFormData((prev) => ({
+      ...prev,
+      amenities: checked
+        ? [...prev.amenities, value]
+        : prev.amenities.filter((item) => item !== value),
+    }));
   };
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files).slice(0, 5);
-    setFormData({
-      ...formData,
-      hotelImages: files,
-    });
-
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setImagePreviews(previews);
+    setFormData((prev) => ({ ...prev, hotelImages: files }));
+    setImagePreviews(files.map((file) => URL.createObjectURL(file)));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log("Form submitted:", formData);
-    navigate("/hotel");
+    const data = new FormData();
+
+    data.append("hotelName", formData.hotelName);
+    data.append("numberOfRooms", formData.numberOfRooms);
+    data.append("numberOfOccupancies", formData.numberOfOccupancies);
+    data.append("contactPerson", formData.contactPerson);
+    data.append("mobileNumber", formData.mobileNumber);
+    data.append("mailId", formData.mailId);
+    data.append("address", formData.address);
+    data.append("city", formData.city);
+    data.append("area", formData.area);
+    data.append("pincode", formData.pincode);
+    data.append("googleMapLink", formData.googleMapLink);
+
+    formData.amenities.forEach((amenity, index) => {
+      data.append(`amenities[${index}]`, amenity);
+    });
+
+    formData.hotelImages.forEach((image) => {
+      data.append("hotelImages", image);
+    });
+
+    try {
+      const response = await CreateHotel(data);
+      message.success("Hotel created successfully!");
+      navigate("/hotel");
+    } catch (error) {
+      console.error("Error creating hotel:", error);
+      message.error("Failed to create hotel.");
+    }
   };
 
   const handleReset = () => {
     setFormData({
       hotelName: "",
-      noOfRooms: "",
-      noOfOccupancies: "",
+      numberOfRooms: "",
+      numberOfOccupancies: "",
       contactPerson: "",
       mobileNumber: "",
       mailId: "",
@@ -88,7 +104,7 @@ const HotelForm = () => {
       city: "",
       area: "",
       pincode: "",
-      locationLink: "",
+      googleMapLink: "",
       hotelImages: [],
       amenities: [],
     });
@@ -145,8 +161,8 @@ const HotelForm = () => {
               </label>
               <input
                 type="number"
-                name="noOfRooms"
-                value={formData.noOfRooms}
+                name="numberOfRooms"
+                value={formData.numberOfRooms}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 required
@@ -161,8 +177,8 @@ const HotelForm = () => {
               </label>
               <input
                 type="number"
-                name="noOfOccupancies"
-                value={formData.noOfOccupancies}
+                name="numberOfOccupancies"
+                value={formData.numberOfOccupancies}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 required
@@ -274,8 +290,8 @@ const HotelForm = () => {
             </label>
             <input
               type="url"
-              name="locationLink"
-              value={formData.locationLink}
+              name="googleMapLink"
+              value={formData.googleMapLink}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               required
