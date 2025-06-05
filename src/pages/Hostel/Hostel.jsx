@@ -7,12 +7,15 @@ const Hostel = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(2);
   const navigate = useNavigate();
-   const [data, setData] = useState([]);
+  const [hostels, setHostels] = useState([]);
+
+   
   
     const getHostel = async() =>{
       try {
         const res = await GetHostel();
         console.log(res.data,'get hostel')
+     setHostels(res.data)
       } catch (error) {
         console.error(error)
       }
@@ -22,53 +25,6 @@ const Hostel = () => {
       getHostel();
     },[])
 
-  const [hostels, setHostels] = useState([
-    {
-      id: 1,
-      hostelName: "Paradise Hostel",
-      contactPerson: "John Doe",
-      mobileNumber: "9876543210",
-      city: "New York",
-      area: "Manhattan",
-      verified: true,
-    },
-    {
-      id: 4,
-      hostelName: "Sunshine Residency",
-      contactPerson: "Jane Smith",
-      mobileNumber: "8765432109",
-      city: "Los Angeles",
-      area: "Downtown",
-      verified: false,
-    },
-    {
-      id: 5,
-      hostelName: "Sunshine Residency",
-      contactPerson: "Jane Smith",
-      mobileNumber: "8765432109",
-      city: "Los Angeles",
-      area: "Downtown",
-      verified: false,
-    },
-    {
-      id: 6,
-      hostelName: "Sunshine Residency",
-      contactPerson: "Jane Smith",
-      mobileNumber: "8765432109",
-      city: "Los Angeles",
-      area: "Downtown",
-      verified: false,
-    },
-    {
-      id: 7,
-      hostelName: "Sunshine Residency",
-      contactPerson: "Jane Smith",
-      mobileNumber: "8765432109",
-      city: "Los Angeles",
-      area: "Downtown",
-      verified: false,
-    },
-  ]);
 
   const filteredData = hostels.filter((item) =>
     [
