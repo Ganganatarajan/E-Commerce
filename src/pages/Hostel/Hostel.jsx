@@ -202,6 +202,190 @@ const Hostel = () => {
           </button>
         </div>
       </div>
+      {isOpen && selectedHotel && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                <div
+                  ref={modalRef}
+                  className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
+                >
+                  <div className="relative h-72 bg-gray-100">
+                    {selectedHotel.hotelImages &&
+                    selectedHotel.hotelImages.length > 0 ? (
+                      <>
+                        <img
+                          src={selectedHotel.hotelImages[currentImageIndex]}
+                          alt="Hostel"
+                          className="w-full h-full object-cover"
+                        />
+                        {selectedHotel.hotelImages.length > 1 && (
+                          <>
+                            <button
+                              onClick={previousImage}
+                              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
+                            >
+                              <FaChevronLeft />
+                            </button>
+                            <button
+                              onClick={nextImage}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
+                            >
+                              <FaChevronRight />
+                            </button>
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                              {selectedHotel.hotelImages.map((_, index) => (
+                                <div
+                                  key={index}
+                                  className={`w-2 h-2 rounded-full ${
+                                    index === currentImageIndex
+                                      ? "bg-white"
+                                      : "bg-white/50"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        No images available
+                      </div>
+                    )}
+                  </div>
+      
+                  <div className="p-6 overflow-y-auto">
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          {selectedHotel.hotelName}
+                        </h2>
+                        <div className="flex gap-2 mt-2 text-sm">
+                          <span className="bg-gray-100 px-2 py-0.5 rounded-full">
+                            {selectedHotel.numberOfRooms} Rooms
+                          </span>
+                          <span className="bg-gray-100 px-2 py-0.5 rounded-full">
+                            Occupancy: {selectedHotel.numberOfOccupancies}
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                              selectedHotel.active
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {selectedHotel.active ? "Active" : "Inactive"}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={closeModal}
+                        className="text-gray-500 hover:text-black"
+                      >
+                        <FaTimes size={20} />
+                      </button>
+                    </div>
+      
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                      <div className="space-y-4">
+                        <div className="border-t pt-4">
+                          <h3 className="text-gray-500 mb-2">Contact Info</h3>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <FaUser className="text-gray-400" />
+                              <span>{selectedHotel.contactPerson || "N/A"}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <FaPhone className="text-gray-400" />
+                              <a href={`tel:${selectedHotel.mobileNumber}`}>
+                                {selectedHotel.mobileNumber || "N/A"}
+                              </a>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <FaEnvelope className="text-gray-400" />
+                              <a href={`mailto:${selectedHotel.mailId}`}>
+                                {selectedHotel.mailId || "N/A"}
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+      
+                        <div className="border-t pt-4">
+                          <h3 className="text-gray-500 mb-2">Property Details</h3>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <FaHome className="text-gray-400" />
+                              <span>
+                                Rooms: {selectedHotel.numberOfRooms || "N/A"}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <FaUser className="text-gray-400" />
+                              <span>
+                                Occupancy:{" "}
+                                {selectedHotel.numberOfOccupancies || "N/A"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+      
+                      <div className="space-y-4">
+                        <div className="border-t pt-4">
+                          <h3 className="text-gray-500 mb-2">Location</h3>
+                          <div className="flex gap-2 items-start">
+                            <FaMapMarkerAlt className="text-gray-400 mt-1" />
+                            <div>
+                              <p>{selectedHotel.address || "N/A"}</p>
+                              <p>
+                                {selectedHotel.area}, {selectedHotel.city}
+                              </p>
+                              {selectedHotel.pincode && (
+                                <p>PIN: {selectedHotel.pincode}</p>
+                              )}
+                              {selectedHotel.googleMapLink && (
+                                <a
+                                  href={selectedHotel.googleMapLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline inline-flex items-center gap-1 mt-1"
+                                >
+                                  <FaMapMarkerAlt size={12} />
+                                  View on Map
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+      
+                        {selectedHotel.amenities &&
+                          selectedHotel.amenities.length > 0 && (
+                            <div className="border-t pt-4">
+                              <h3 className="text-gray-500 mb-2">Amenities</h3>
+                              <div className="flex flex-wrap gap-2">
+                                {selectedHotel.amenities.map((item, idx) => {
+                                  // Clean up amenity string if it's in JSON format
+                                  let amenity = item;
+                                  if (item.startsWith('["') && item.endsWith('"]')) {
+                                    amenity = item.slice(2, -2);
+                                  }
+                                  return (
+                                    <span
+                                      key={idx}
+                                      className="bg-gray-100 px-2 py-0.5 rounded-full text-xs"
+                                    >
+                                      {amenity}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
     </div>
   );
 };
