@@ -10,7 +10,8 @@ import {
   FaHome,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { GetHotel, GetIdHotel } from "../../Services/Hotel";
+import { DeleteHotel, GetHotel, GetIdHotel } from "../../Services/Hotel";
+import { message, Modal } from "antd";
 
 const Hotel = () => {
   const [search, setSearch] = useState("");
@@ -75,7 +76,7 @@ const Hotel = () => {
 
   const filteredData = hotels.filter((item) =>
     [
-      item.hostelName,
+      item.hotelName,
       item.contactPerson,
       item.mobileNumber,
       item.city,
@@ -106,20 +107,11 @@ const Hotel = () => {
   const toggleVerified = (id) => {
     setHotels(
       hotels.map((hotel) =>
-        hotel.id === id ? { ...hotel, verified: !hotel.verified } : hostel
+        hotel.id === id ? { ...hotel, verified: !hotel.verified } : hotel
       )
     );
   };
 
-  const deleteHostel = (id) => {
-    setHostels(hotels.filter((hotel) => hotel.id !== id));
-  };
-
-  const navigateToAdd = () => {
-    navigate("/hostel/add");
-  };
-
-  useEffect(() => {
     const fetchHotels = async () => {
       try {
         const res = await GetHotel();
@@ -130,19 +122,44 @@ const Hotel = () => {
         // setLoading(false);
       }
     };
-
+  
+useEffect(()=>{
     fetchHotels();
+    
   }, []);
 
-  const handleEditClick = async (id) => {
-    try {
-      const response = await GetIdHotel(id);
-      console.log("Hotel data:", response?.data);
-      navigate(`/hotel/edit/:id`);
-    } catch (error) {
-      console.error("Error fetching hotel data:", error);
+    
+const deletehotel = (id) => {
+  Modal.confirm({
+    title: "Are you sure you want to delete this hotel?",
+    content: "This action cannot be undone.",
+    okText: "Yes, Delete",
+    okType: "danger",
+    cancelText: "Cancel",
+    onOk: async () => {
+      try {
+        await DeleteHotel(id);
+        message.success("Hotel deleted successfully!");
+        // Optimistic UI update
+        setHotels(prevHotels => prevHotels.filter((hotel) => hotel.id !== id));
+        // Refresh data from server
+        const res = await GetHotel();
+        setHotels(res?.data || []);
+      } catch (error) {
+        console.error("Error deleting hotel:", error);
+        message.error(error.response?.data?.message || "Failed to delete hotel");
+        // Re-fetch to ensure UI matches server state
+        const res = await GetHotel();
+        setHotels(res?.data || []);
+      }
     }
+  });
+};
+
+  const navigateToAdd = () => {
+    navigate("/hotel/add");
   };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -188,7 +205,7 @@ const Hotel = () => {
               clipRule="evenodd"
             />
           </svg>
-          Add Hostel
+          Add hotel
         </button>
       </div>
 
@@ -207,7 +224,7 @@ const Hotel = () => {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Hostel Name
+                  hotel Name
                 </th>
                 <th
                   scope="col"
@@ -305,7 +322,7 @@ const Hotel = () => {
                         </button>
                         <button
                           className="text-yellow-600 hover:text-yellow-900"
-                          onClick={() => handleEditClick(item._id)}
+                         onClick={() => navigate(`/hotel/edit/${item._id}`)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -317,7 +334,7 @@ const Hotel = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => deleteHostel(item.id)}
+                          onClick={() => deletehotel(`hotel/delete/${item._id}`)}
                           className="text-red-600 hover:text-red-900"
                         >
                           <svg
@@ -405,7 +422,7 @@ const Hotel = () => {
                 <>
                   <img
                     src={selectedHotel.hotelImages[currentImageIndex]}
-                    alt="Hostel"
+                    alt="hotel"
                     className="w-full h-full object-cover"
                   />
                   {selectedHotel.hotelImages.length > 1 && (
