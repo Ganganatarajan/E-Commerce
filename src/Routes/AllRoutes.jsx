@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import Hostel from "../pages/Hostel/Hostel";
 import HostelForm from "../pages/Hostel/HostelForm";
@@ -17,13 +17,27 @@ import Admins from "../pages/Admins/Admins";
 import AdminsForm from "../pages/Admins/AdminsForm";
 import EditHotel from "../pages/Hotel/EditHotel";
 import LoginForm from "../Common/Login";
-// import EditAdmin from '../pages/Admins/EditAdmin';
+
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("viduthiiadmintoken");
+  return token ? children : <Navigate to="/login" />;
+};
 
 const AllRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
-      <Route path="login" element={<LoginForm/>}/>
+      {/* 👇 Public Route */}
+      <Route path="/login" element={<LoginForm />} />
+
+      {/* 👇 Private Routes wrapped under MainLayout */}
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        }
+      >
         <Route path="hostel" element={<Hostel />} />
         <Route path="hostel/add" element={<HostelForm />} />
         <Route path="PremiumAds" element={<PremiumTable />} />
@@ -37,11 +51,9 @@ const AllRoutes = () => {
         <Route path="jobs" element={<JobsTable />} />
         <Route path="/hostel/get/:id" element={<EditHostelForm />} />
         <Route path="/hotel/edit/:id" element={<EditHotel />} />
-
         <Route path="Admins" element={<Admins />} />
         <Route path="Admins/add" element={<AdminsForm />} />
         <Route path="/Admins/view/:id" element={<ViewAdmin />} />
-        {/* <Route path="/Admins/edit/:id" element={<EditAdmin />} /> */}
       </Route>
     </Routes>
   );

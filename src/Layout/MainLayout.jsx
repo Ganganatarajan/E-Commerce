@@ -14,26 +14,25 @@ const MainLayout = () => {
       <main className="flex-1 bg-gray-50 p-4">
         <Navbar />
 
-        <div className="px-2 text-sm text-gray-500  mt-4">
+        <div className="px-2 text-sm text-gray-500 mt-4">
           <nav className="flex items-center space-x-2">
-            <Link to="/" className=" hover:underline">
-              Home
-            </Link>
-            {pathnames.map((value, index) => {
-              const to = `/${pathnames.slice(0, index + 1).join("/")}`;
-              const label = value.charAt(0).toUpperCase() + value.slice(1);
-              return (
-                <div key={to} className="flex items-center space-x-2">
-                  <span>/</span>
-                  <Link
-                    to={to}
-                    className="text-[#330066] font-semibold hover:underline"
-                  >
-                    {label}
-                  </Link>
-                </div>
-              );
-            })}
+            {pathnames
+              .filter((value) => isNaN(value)) // Skip numeric IDs or slugs
+              .map((value, index) => {
+                const to = `/${pathnames.slice(0, index + 1).join("/")}`;
+                const label = value.charAt(0).toUpperCase() + value.slice(1);
+                return (
+                  <div key={to} className="flex items-center space-x-2">
+                    <span>/</span>
+                    <Link
+                      to={to}
+                      className="text-[#330066] font-semibold hover:underline"
+                    >
+                      {label}
+                    </Link>
+                  </div>
+                );
+              })}
           </nav>
         </div>
 
