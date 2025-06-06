@@ -1,4 +1,3 @@
-
 // import apiInstance from "../interceptors/axios";
 // import { message } from "antd";
 
@@ -14,7 +13,7 @@
 //   }
 // };
 
-import apiInstance from '../interceptors/axios';
+import apiInstance from "../interceptors/axios";
 
 import { message } from "antd";
 
@@ -33,7 +32,6 @@ export const createHostel = async (data) => {
     formData.append("area", data.area);
     formData.append("pincode", data.pincode);
     formData.append("googleMapLink", data.googleMapLink);
-
 
     data.amenities?.forEach((item) => {
       formData.append("amenities", item);
@@ -58,24 +56,22 @@ export const createHostel = async (data) => {
   }
 };
 
-
 export const GetHostel = async () => {
-  const response = await apiInstance.get('hostel/get-all');
+  const response = await apiInstance.get("/hostel/get-all");
   return response;
-}
-
+};
 
 export const getHostelById = async (id) => {
-  const res = await apiInstance.get(`http://localhost:7055/v1/hostel/get/${id}`);
+  const res = await apiInstance.get(`/hostel/get/${id}`);
   return res.data;
 };
 
 export const updateHostel = async (id, data) => {
-  const res = await apiInstance.put(`http://localhost:7055/v1/hostel/update/${id}`, data);
+  const res = await apiInstance.put(`/hostel/update/${id}`, data);
   return res.data;
 };
 
 export const deleteHostel = async (id) => {
-  const res = await apiInstance.delete(`http://localhost:7055/v1/hostel/delete/${id}`);
+  const res = await apiInstance.delete(`/hostel/delete/${id}`);
   return res.data;
 };
