@@ -112,54 +112,55 @@ const Hotel = () => {
     );
   };
 
-    const fetchHotels = async () => {
-      try {
-        const res = await GetHotel();
-        setHotels(res?.data || []);
-      } catch (error) {
-        console.error("Error fetching hotels:", error);
-      } finally {
-        // setLoading(false);
-      }
-    };
-  
-useEffect(()=>{
+  const fetchHotels = async () => {
+    try {
+      const res = await GetHotel();
+      setHotels(res?.data || []);
+    } catch (error) {
+      console.error("Error fetching hotels:", error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchHotels();
-    
   }, []);
 
-    
-const deletehotel = (id) => {
-  Modal.confirm({
-    title: "Are you sure you want to delete this hotel?",
-    content: "This action cannot be undone.",
-    okText: "Yes, Delete",
-    okType: "danger",
-    cancelText: "Cancel",
-    onOk: async () => {
-      try {
-        await DeleteHotel(id);
-        message.success("Hotel deleted successfully!");
-        // Optimistic UI update
-        setHotels(prevHotels => prevHotels.filter((hotel) => hotel.id !== id));
-        // Refresh data from server
-        const res = await GetHotel();
-        setHotels(res?.data || []);
-      } catch (error) {
-        console.error("Error deleting hotel:", error);
-        message.error(error.response?.data?.message || "Failed to delete hotel");
-        // Re-fetch to ensure UI matches server state
-        const res = await GetHotel();
-        setHotels(res?.data || []);
-      }
-    }
-  });
-};
+  const deletehotel = (id) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this hotel?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          await DeleteHotel(id);
+          message.success("Hotel deleted successfully!");
+          // Optimistic UI update
+          setHotels((prevHotels) =>
+            prevHotels.filter((hotel) => hotel.id !== id)
+          );
+          // Refresh data from server
+          const res = await GetHotel();
+          setHotels(res?.data || []);
+        } catch (error) {
+          console.error("Error deleting hotel:", error);
+          message.error(
+            error.response?.data?.message || "Failed to delete hotel"
+          );
+          // Re-fetch to ensure UI matches server state
+          const res = await GetHotel();
+          setHotels(res?.data || []);
+        }
+      },
+    });
+  };
 
   const navigateToAdd = () => {
     navigate("/hotel/add");
   };
-
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -268,7 +269,7 @@ const deletehotel = (id) => {
               {currentData.length > 0 ? (
                 currentData.map((item, index) => (
                   <tr key={item.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4  text-sm text-gray-500">
                       {startIndex + index + 1}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -276,19 +277,19 @@ const deletehotel = (id) => {
                         {item.hotelName}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4  text-sm text-gray-500">
                       {item.contactPerson}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4  text-sm text-gray-500">
                       {item.mobileNumber}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4  text-sm text-gray-500">
                       {item.city}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4  text-sm text-gray-500">
                       {item.area}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 ">
                       <button
                         onClick={() => toggleVerified(item.id)}
                         className={`px-3 py-1 text-xs font-semibold rounded-full transition duration-300 ${
@@ -300,7 +301,7 @@ const deletehotel = (id) => {
                         {item.verified ? "Verified" : "Unverified"}
                       </button>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4  text-sm font-medium">
                       <div className="flex space-x-2">
                         <button
                           className="text-blue-600 hover:text-blue-900"
@@ -322,7 +323,7 @@ const deletehotel = (id) => {
                         </button>
                         <button
                           className="text-yellow-600 hover:text-yellow-900"
-                         onClick={() => navigate(`/hotel/edit/${item._id}`)}
+                          onClick={() => navigate(`/hotel/edit/${item._id}`)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -334,7 +335,9 @@ const deletehotel = (id) => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => deletehotel(`hotel/delete/${item._id}`)}
+                          onClick={() =>
+                            deletehotel(`hotel/delete/${item._id}`)
+                          }
                           className="text-red-600 hover:text-red-900"
                         >
                           <svg
