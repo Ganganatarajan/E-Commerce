@@ -16,12 +16,14 @@ import ViewAdmin from "../pages/Admins/ViewAdmin";
 import Admins from "../pages/Admins/Admins";
 import AdminsForm from "../pages/Admins/AdminsForm";
 import EditHotel from "../pages/Hotel/EditHotel";
+import LoginForm from "../Common/Login";
 // import EditAdmin from '../pages/Admins/EditAdmin';
 
 const AllRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
+      <Route path="login" element={<LoginForm/>}/>
         <Route path="hostel" element={<Hostel />} />
         <Route path="hostel/add" element={<HostelForm />} />
         <Route path="PremiumAds" element={<PremiumTable />} />
