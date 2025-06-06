@@ -267,7 +267,7 @@ const Hostel = () => {
                         </button>
                         {/* Edit */}
                         <button
-                          onClick={() => navigate(`/hostel/edit/${item._id}`)}
+                          onClick={() => navigate(`/hostel/get/${item._id}`)}
                           className="text-yellow-600 hover:text-yellow-900"
                           title="Edit"
                         >

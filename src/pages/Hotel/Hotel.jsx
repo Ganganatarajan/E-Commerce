@@ -10,7 +10,7 @@ import {
   FaHome,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { GetHotel } from "../../Services/Hotel";
+import { GetHotel, GetIdHotel } from "../../Services/Hotel";
 
 const Hotel = () => {
   const [search, setSearch] = useState("");
@@ -133,6 +133,16 @@ const Hotel = () => {
 
     fetchHotels();
   }, []);
+
+  const handleEditClick = async (id) => {
+    try {
+      const response = await GetIdHotel(id);
+      console.log("Hotel data:", response?.data);
+      navigate(`/hotel/edit/:id`);
+    } catch (error) {
+      console.error("Error fetching hotel data:", error);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -293,7 +303,10 @@ const Hotel = () => {
                             />
                           </svg>
                         </button>
-                        <button className="text-yellow-600 hover:text-yellow-900">
+                        <button
+                          className="text-yellow-600 hover:text-yellow-900"
+                          onClick={() => handleEditClick(item._id)}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-5 w-5"

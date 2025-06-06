@@ -11,15 +11,12 @@ import HotelForm from "../pages/Hotel/HotelForm";
 import User from "../pages/User/User";
 import SkilledDirectors from "../pages/SkilledDirectors/SkilledDirectors";
 import JobsTable from "../pages/Jobs/Jobs";
-import EditHostelForm from "../pages/Hostel/EditHostel"
-import ViewAdmin from '../pages/Admins/ViewAdmin';
-import Admins from '../pages/Admins/ViewAdmin';
-import AdminsForm from '../pages/Admins/ViewAdmin';
-
+import EditHostelForm from "../pages/Hostel/EditHostel";
+import ViewAdmin from "../pages/Admins/ViewAdmin";
 import Admins from "../pages/Admins/Admins";
 import AdminsForm from "../pages/Admins/AdminsForm";
+import EditHotel from "../pages/Hotel/EditHotel";
 // import EditAdmin from '../pages/Admins/EditAdmin';
-
 
 const AllRoutes = () => {
   return (
@@ -37,12 +34,12 @@ const AllRoutes = () => {
         <Route path="SkilledDirectors" element={<SkilledDirectors />} />
         <Route path="jobs" element={<JobsTable />} />
         <Route path="/hostel/get/:id" element={<EditHostelForm />} />
+        <Route path="/hotel/edit/:id" element={<EditHotel />} />
 
         <Route path="Admins" element={<Admins />} />
         <Route path="Admins/add" element={<AdminsForm />} />
         <Route path="/Admins/view/:id" element={<ViewAdmin />} />
         {/* <Route path="/Admins/edit/:id" element={<EditAdmin />} /> */}
-
       </Route>
     </Routes>
   );
