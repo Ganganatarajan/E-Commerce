@@ -216,7 +216,7 @@ const Hostel = () => {
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {startIndex + index + 1}
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 text-sm  text-gray-500">
                       {item.hostelName}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
