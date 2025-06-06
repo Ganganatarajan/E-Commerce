@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createHostel } from "../../Services/Hostel";
 import { message } from "antd";
@@ -36,8 +36,6 @@ const HostelForm = () => {
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
- 
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,9 +104,9 @@ const HostelForm = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center mb-8">
+    <div className="container mx-auto p-2">
+      <div className=" mx-auto">
+        <div className="flex items-center mb-8 mt-2">
           <button
             onClick={() => navigate("/hostel")}
             className="mr-4 text-gray-600 hover:text-gray-900"
@@ -128,7 +126,7 @@ const HostelForm = () => {
               />
             </svg>
           </button>
-          <h1 className="text-3xl font-bold text-gray-800">Add New Hostel</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Add New Hostel</h1>
         </div>
 
         <form

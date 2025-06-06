@@ -112,9 +112,9 @@ const HotelForm = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center mb-8">
+    <div className="container mx-auto p-2">
+      <div className=" mx-auto">
+        <div className="flex items-center mb-8 mt-2">
           <button
             onClick={() => navigate("/hotel")}
             className="mr-4 text-gray-600 hover:text-gray-900"
@@ -134,7 +134,7 @@ const HotelForm = () => {
               />
             </svg>
           </button>
-          <h1 className="text-3xl font-bold text-gray-800">Add New Hotel</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Add New Hotel</h1>
         </div>
 
         <form

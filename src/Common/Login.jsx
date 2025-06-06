@@ -11,18 +11,18 @@ const reverseRotateAnimation = {
 };
 
 const LoginForm = () => {
-    const [formData, setFormData] = useState({
-    mailId: '',
-    password: '',
-    rememberMe: false
+  const [formData, setFormData] = useState({
+    mailId: "",
+    password: "",
+    rememberMe: false,
   });
   const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -33,15 +33,14 @@ const LoginForm = () => {
     try {
       const credentials = {
         mailId: formData.mailId,
-        password: formData.password
+        password: formData.password,
       };
-      
+
       await login(credentials);
-      
+
       // Success message will be shown by the interceptor
       // Redirect to dashboard or home page
       window.location.href = "/PremiumAds";
-      
     } catch (error) {
       // Error is already handled by the interceptor
       // You can add additional error handling here if needed
@@ -51,7 +50,7 @@ const LoginForm = () => {
   };
 
   return (
- <div className="flex items-center justify-center min-h-screen bg-gray-50 font-[Poppins] p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 font-[Poppins] p-4">
       <style>
         {`
           @keyframes spin {
@@ -72,7 +71,10 @@ const LoginForm = () => {
         />
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="absolute inset-[2px] bg-white rounded-2xl p-6 sm:p-8 z-10 flex flex-col justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="absolute inset-[2px] bg-white rounded-2xl p-6 sm:p-8 z-10 flex flex-col justify-center"
+        >
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
               Welcome Back
@@ -84,11 +86,8 @@ const LoginForm = () => {
 
           <div className="flex flex-col space-y-4">
             <div className="space-y-1">
-              <label
-                htmlFor="mailId"
-                className="block text-sm font-medium text-gray-700"
-              >
-                mailId
+              <label className="block text-sm font-medium text-gray-700">
+                Mail Id
               </label>
               <input
                 id="mailId"
@@ -148,18 +147,8 @@ const LoginForm = () => {
               disabled={loading}
               className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-pink-600 text-white font-medium py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? "Signing In..." : "Sign In"}
             </button>
-
-            <div className="text-center text-sm text-gray-500 mt-4">
-              Don't have an account?{" "}
-              <a
-                href="#"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Sign up
-              </a>
-            </div>
           </div>
         </form>
       </div>
