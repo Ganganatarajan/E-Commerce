@@ -1,16 +1,18 @@
 import React, { useState } from "react";
+import { CreatePremimumAds } from "../../Services/PremimumAds";
 
 const PremiumForm = () => {
   const [formData, setFormData] = useState({
-    hostelType: "single",
+    hostelType: "Single Hostel",
     branches: "",
     title: "",
     content: "",
-    image: null,
+    images: [],
     branchName: "",
-    locationSide: "north",
+    locationSide: "North",
   });
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,32 +22,96 @@ const PremiumForm = () => {
     }));
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setFormData((prev) => ({ ...prev, image: file }));
-    if (file) setError("");
+ const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    
+    // Validate number of images
+    if (formData.images.length + files.length > 5) {
+      setError("You can upload a maximum of 5 images");
+      return;
+    }
+    
+    // Validate file types
+    const validFiles = files.filter(file => file.type.startsWith('image/'));
+    if (validFiles.length !== files.length) {
+      setError("Only image files are allowed");
+      return;
+    }
+    
+    // Create preview URLs
+    const newImages = validFiles.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+    
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ...newImages]
+    }));
+    
+    if (validFiles.length > 0) setError("");
   };
 
-  const handleSubmit = (e) => {
+  const removeImage = (index) => {
+    // Revoke the object URL to avoid memory leaks
+    URL.revokeObjectURL(formData.images[index].preview);
+    
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
+ const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.image) {
-      setError("Image is required");
+    
+    if (formData.images.length === 0) {
+      setError("At least one image is required");
       return;
     }
 
-    console.log("Submitting:", formData);
-    // Handle API submission here
+    const submitData = new FormData();
+    submitData.append("hostelType", formData.hostelType);
+    submitData.append("title", formData.title);
+    submitData.append("content", formData.content);
+    submitData.append("branchName", formData.branchName);
+    submitData.append("locationSide", formData.locationSide);
+    
+    // Append all images
+    formData.images.forEach(image => {
+      submitData.append("bannerImage", image.file);
+    });
+    
+    try {
+      setIsSubmitting(true);
+      const response = await CreatePremimumAds(submitData);
+      console.log("Advertisement created successfully:", response.data);
+      
+      // Clean up object URLs
+      formData.images.forEach(image => URL.revokeObjectURL(image.preview));
+      
+      handleCancel();
+      alert("Premium advertisement created successfully!");
+    } catch (err) {
+      console.error("Error creating advertisement:", err);
+      setError(err.response?.data?.message || "Failed to create advertisement");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
+    // Clean up object URLs before resetting
+    formData.images.forEach(image => URL.revokeObjectURL(image.preview));
+    
     setFormData({
-      hostelType: "single",
+      hostelType: "Single Hostel",
       branches: "",
       title: "",
       content: "",
-      image: null,
+      images: [],
       branchName: "",
-      locationSide: "north",
+      locationSide: "North",
     });
     setError("");
   };
@@ -58,6 +124,12 @@ const PremiumForm = () => {
           Create a new premium advertisement for your hostel(s)
         </p>
 
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Hostel Type */}
           <div className="space-y-2">
@@ -67,8 +139,8 @@ const PremiumForm = () => {
                 <input
                   type="radio"
                   name="hostelType"
-                  value="single"
-                  checked={formData.hostelType === "single"}
+                  value="Single Hostel"
+                  checked={formData.hostelType === "Single Hostel"}
                   onChange={handleChange}
                   className="text-purple-600"
                 />
@@ -78,8 +150,8 @@ const PremiumForm = () => {
                 <input
                   type="radio"
                   name="hostelType"
-                  value="multi"
-                  checked={formData.hostelType === "multi"}
+                  value="Multiple Hostel"
+                  checked={formData.hostelType === "Multiple Hostel"}
                   onChange={handleChange}
                   className="text-purple-600"
                 />
@@ -89,7 +161,7 @@ const PremiumForm = () => {
           </div>
 
           {/* Branches (conditional) */}
-          {formData.hostelType === "multi" && (
+          {formData.hostelType === "Multiple Hostel" && (
             <div>
               <label className="block font-medium text-gray-700 mb-1">
                 Number of Branches
@@ -117,6 +189,7 @@ const PremiumForm = () => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-purple-600 focus:ring-1 focus:ring-purple-600"
               placeholder="Enter a catchy title for your advertisement"
+              required
             />
           </div>
 
@@ -132,6 +205,7 @@ const PremiumForm = () => {
               rows={4}
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-purple-600 focus:ring-1 focus:ring-purple-600"
               placeholder="Describe your hostel's features, amenities, and special offers"
+              required
             />
           </div>
 
@@ -146,7 +220,8 @@ const PremiumForm = () => {
               value={formData.branchName}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-purple-600 focus:ring-1 focus:ring-purple-600"
-              placeholder="Enter the branch name (if applicable)"
+              placeholder="Enter the branch name"
+              required
             />
           </div>
 
@@ -160,19 +235,46 @@ const PremiumForm = () => {
               value={formData.locationSide}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-purple-600 focus:ring-1 focus:ring-purple-600"
+              required
             >
-              <option value="north">North</option>
-              <option value="south">South</option>
-              <option value="east">East</option>
-              <option value="west">West</option>
+              <option value="North">North</option>
+              <option value="South">South</option>
+              <option value="East">East</option>
+              <option value="West">West</option>
             </select>
           </div>
 
           {/* Image Upload */}
-          <div>
+       <div>
             <label className="block font-medium text-gray-700 mb-2">
-              Hostel Image
+              Hostel Images (Max 5)
             </label>
+            
+            {/* Image Previews */}
+            {formData.images.length > 0 && (
+              <div className="mb-4 grid grid-cols-2 md:grid-cols-3 gap-3">
+                {formData.images.map((image, index) => (
+                  <div key={index} className="relative group">
+                    <img 
+                      src={image.preview} 
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ×
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 truncate">
+                      {image.file.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
             <div
               className={`border-2 ${
                 error ? "border-red-500" : "border-dashed border-gray-300"
@@ -184,21 +286,29 @@ const PremiumForm = () => {
                 onChange={handleImageUpload}
                 className="hidden"
                 id="imageUpload"
+                multiple
+                disabled={formData.images.length >= 5}
               />
               <label
                 htmlFor="imageUpload"
-                className="cursor-pointer text-center"
+                className={`cursor-pointer text-center ${
+                  formData.images.length >= 5 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
                 <div className="text-3xl text-purple-600 mb-2">📷</div>
                 <p className="text-sm text-gray-700 font-medium">
-                  {formData.image ? formData.image.name : "Click to upload hostel image"}
+                  {formData.images.length > 0 
+                    ? `Upload more images (${formData.images.length}/5)`
+                    : "Click to upload hostel images"}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  Recommended size: 1200x600px
+                  Recommended size: 1200x600px (Max 5 images)
                 </p>
               </label>
             </div>
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            <p className="text-xs text-gray-500 mt-1">
+              {formData.images.length} of 5 images selected
+            </p>
           </div>
 
           {/* Form Actions */}
@@ -207,14 +317,16 @@ const PremiumForm = () => {
               type="button"
               onClick={handleCancel}
               className="px-5 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors shadow-sm"
+              className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors shadow-sm disabled:opacity-50"
+              disabled={isSubmitting}
             >
-              Publish Advertisement
+              {isSubmitting ? "Publishing..." : "Publish Advertisement"}
             </button>
           </div>
         </form>
