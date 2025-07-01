@@ -1,6 +1,4 @@
-
-
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllJobs, deleteJob } from "../../Services/Jobs";
 import {
@@ -206,7 +204,7 @@ const Jobs = () => {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {item.salary}
-</td>
+                    </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {item.postedBy}
                     </td>
@@ -224,11 +222,11 @@ const Jobs = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex space-x-2">
-                        {/* View */}
                         <button
                           onClick={() => openModal(item._id)}
                           className="text-blue-600 hover:text-blue-900"
                           title="View"
+                          aria-label="View job details"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -244,11 +242,11 @@ const Jobs = () => {
                             />
                           </svg>
                         </button>
-                        {/* Edit */}
                         <button
                           onClick={() => navigate(`/jobs/edit/${item._id}`)}
                           className="text-yellow-600 hover:text-yellow-900"
                           title="Edit"
+                          aria-label="Edit job"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -259,11 +257,11 @@ const Jobs = () => {
                             <path d="M13.586 3.586a2 2 0 112.828 2.828L7 15.828H4v-3.172l9.586-9.586z" />
                           </svg>
                         </button>
-                        {/* Delete */}
                         <button
                           onClick={() => deleteJobById(item._id)}
                           className="text-red-600 hover:text-red-900"
                           title="Delete"
+                          aria-label="Delete job"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -303,101 +301,128 @@ const Jobs = () => {
           <button
             onClick={handlePrev}
             disabled={currentPage === 1}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity只
-
-System: opacity-50"
+            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+            aria-label="Previous page"
           >
             Prev
           </button>
           <button
             onClick={handleNext}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 Rounded disabled:opacity-50"
+            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+            aria-label="Next page"
           >
             Next
           </button>
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Improved Modal */}
       {isOpen && selectedJob && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 transition-opacity duration-300"
+          role="dialog"
+          aria-labelledby="job-modal-title"
+          aria-modal="true"
+        >
           <div
             ref={modalRef}
-            className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
+            className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100 hover:scale-[1.01]"
           >
-            <div className="p-6 overflow-y-auto">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                  
-
-System: {selectedJob.jobTitle}
-                  </h2>
-                  <div className="flex gap-2 items-start mb-6">
-                    <span className="bg-gray-100 px-2 py-0.5 rounded-full">
-                      {selectedJob.category}
-                    </span>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        selectedJob.isApproved
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {selectedJob.isApproved ? "Approved" : "Not Approved"}
-                    </span>
-                  </div>
-                </div>
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
+                <h2
+                  id="job-modal-title"
+                  className="text-2xl font-bold text-gray-900"
+                >
+                  {selectedJob.jobTitle}
+                </h2>
                 <button
                   onClick={closeModal}
-                  className="text-gray-500 hover:text-black"
+                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                  aria-label="Close modal"
                 >
                   <FaTimes size={20} />
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-4">
-                  <div className="border-t pt-4">
-                    <h3 className="text-gray-500 mb-2">Job Details</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <FaUser className="text-gray-400" />
-                        <span>Posted By: {selectedJob.postedBy || "N/A"}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <FaEnvelope className="text-gray-400" />
-                        <span>Salary: {selectedJob.salary || "N/A"}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <FaPhone className="text-gray-400" />
-                        <span>
-                          Experience: {selectedJob.experienceRequired || "N/A"}
-                        </span>
+              {/* Content */}
+              <div className="p-6 flex-1 overflow-y-auto">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full">
+                    {selectedJob.category}
+                  </span>
+                  <span
+                    className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-full ${
+                      selectedJob.isApproved
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {selectedJob.isApproved ? "Approved" : "Not Approved"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Job Details */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-2 mb-3">
+                        Job Details
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <FaUser className="text-indigo-600 w-5 h-5" />
+                          <p className="text-gray-600">
+                            <span className="font-medium">Posted By:</span>{" "}
+                            {selectedJob.postedBy || "N/A"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <FaEnvelope className="text-indigo-600 w-5 h-5" />
+                          <p className="text-gray-600">
+                            <span className="font-medium">Salary:</span>{" "}
+                            {selectedJob.salary || "N/A"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <FaPhone className="text-indigo-600 w-5 h-5" />
+                          <p className="text-gray-600">
+                            <span className="font-medium">Experience:</span>{" "}
+                            {selectedJob.experienceRequired || "N/A"}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="border-t pt-4">
-                      <h3 className="text-gray-500 mb-2">Location</h3>
-                      <div className="flex gap-2 items-start">
-                        <FaMapMarkerAlt className="text-gray-400 mt-1" />
-                        <div>
-                          <p>{selectedJob.location || "N/A"}</p>
-                        </div>
+                  {/* Location and Description */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-2 mb-3">
+                        Location
+                      </h3>
+                      <div className="flex items-start gap-3">
+                        <FaMapMarkerAlt className="text-indigo-600 w-5 h-5 mt-1" />
+                        <p className="text-gray-600">
+                          {selectedJob.location || "N/A"}
+                        </p>
                       </div>
                     </div>
-
-                    <div className="border-t pt-4">
-                      <h3 className="text-gray-500 mb-2">Description</h3>
-
-System: <p>{selectedJob.description || "N/A"}</p>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-2 mb-3">
+                        Description
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {selectedJob.description || "N/A"}
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
+
+             
             </div>
           </div>
         </div>

@@ -51,7 +51,7 @@ const AllRoutes = () => {
         <Route path="SkilledDirectors" element={<SkilledDirectors />} />
         <Route path="jobs" element={<JobsTable />} />
         <Route path="jobs/add" element={<JobForm />} />
-        <Route path="jobs/edit/:id" element={<JobsTable />} />
+        <Route path="jobs/edit/:id" element={<JobForm />} />
         <Route path="/hostel/get/:id" element={<EditHostelForm />} />
         <Route path="/hotel/edit/:id" element={<EditHotel />} />
         <Route path="Admins" element={<Admins />} />

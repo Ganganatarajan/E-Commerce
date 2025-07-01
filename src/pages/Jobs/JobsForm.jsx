@@ -56,10 +56,10 @@ const JobForm = () => {
     try {
       if (isEditMode) {
         await updateJob(id, formData);
-        message.success("Job updated successfully!");
+        // message.success("Job updated successfully!");
       } else {
         await createJob(formData);
-        message.success("Job created successfully!");
+        // message.success("Job created successfully!");
       }
       navigate("/jobs");
     } catch (err) {
