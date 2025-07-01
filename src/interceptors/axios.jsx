@@ -2,8 +2,8 @@ import { message } from "antd";
 import axios from "axios";
 
 const apiInstance = axios.create({
-  // baseURL: "http://localhost:7055/v1",
-  baseURL: "https://viduthiiapi.whydev.in/v1",
+  baseURL: "http://localhost:7055/v1",
+  // baseURL: "https://viduthiiapi.whydev.in/v1",
 });
 
 apiInstance.interceptors.request.use(
