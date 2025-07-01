@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { createJob, getJobById, updateJob } from "../../Services/Jobs";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { createJob, updateJob } from "../../Services/Jobs";
 import { message } from "antd";
 
 const JobForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const isEditMode = !!id;
 
@@ -20,45 +21,40 @@ const JobForm = () => {
   });
 
   useEffect(() => {
-    if (isEditMode) {
-      const fetchJob = async () => {
-        try {
-          const res = await getJobById(id);
-          setFormData({
-            jobTitle: res.data.jobTitle || "",
-            category: res.data.category || "",
-            location: res.data.location || "",
-            salary: res.data.salary || "",
-            experienceRequired: res.data.experienceRequired || "",
-            description: res.data.description || "",
-            postedBy: res.data.postedBy || "",
-            isApproved: res.data.isApproved || false,
-          });
-        } catch (err) {
-          console.error("Failed to fetch job:", err);
-          message.error("Failed to load job data.");
-        }
-      };
-      fetchJob();
+    if (isEditMode && location.state) {
+      setFormData({
+        jobTitle: location.state.jobTitle || "",
+        category: location.state.category || "",
+        location: location.state.location || "",
+        salary: location.state.salary || "",
+        experienceRequired: location.state.experienceRequired || "",
+        description: location.state.description || "",
+        postedBy: location.state.postedBy || "",
+        isApproved: location.state.isApproved || false,
+      });
     }
-  }, [id, isEditMode]);
+  }, [isEditMode, location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name === "salary" ? parseFloat(value) || "" : value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const dataToSubmit = {
+        ...formData,
+        salary: parseFloat(formData.salary) || 0,
+      };
       if (isEditMode) {
-        await updateJob(id, formData);
+        await updateJob(id, dataToSubmit);
         // message.success("Job updated successfully!");
       } else {
-        await createJob(formData);
+        await createJob(dataToSubmit);
         // message.success("Job created successfully!");
       }
       navigate("/jobs");
@@ -161,12 +157,14 @@ const JobForm = () => {
                 Salary
               </label>
               <input
-                type="text"
+                type="number"
                 name="salary"
                 value={formData.salary}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 required
+                min="0"
+                step="0.01"
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllJobs, deleteJob } from "../../Services/Jobs";
+import { getAllJobs, deleteJob } from "../../Services/Jobs"
 import {
   FaEnvelope,
   FaMapMarkerAlt,
@@ -179,7 +179,7 @@ const Jobs = () => {
                 ].map((title, i) => (
                   <th
                     key={i}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
                     {title}
                   </th>
@@ -190,28 +190,28 @@ const Jobs = () => {
               {currentData.length > 0 ? (
                 currentData.map((item, index) => (
                   <tr key={item._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-500">
                       {startIndex + index + 1}
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900">
                       {item.jobTitle}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-500">
                       {item.category}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-500">
                       {item.location}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-500">
                       {item.salary}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-500">
                       {item.postedBy}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3">
                       <button
                         onClick={() => toggleApproved(item._id)}
-                        className={`px-3 py-1 text-xs font-semibold rounded-full transition duration-300 ${
+                        className={`px-4 py-1 text-xs font-semibold rounded-full transition duration-300 ${
                           item.isApproved
                             ? "bg-green-500 text-white hover:bg-green-600"
                             : "bg-red-500 text-white hover:bg-red-600"
@@ -220,8 +220,8 @@ const Jobs = () => {
                         {item.isApproved ? "Approved" : "Not Approved"}
                       </button>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex space-x-2">
+                    <td className="px-4 py-4">
+                      <div className="flex space-x-1">
                         <button
                           onClick={() => openModal(item._id)}
                           className="text-blue-600 hover:text-blue-900"
@@ -243,7 +243,9 @@ const Jobs = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => navigate(`/jobs/${item._id}`)}
+                          onClick={() =>
+                            navigate(`/jobs/${item._id}`, { state: item })
+                          }
                           className="text-yellow-600 hover:text-yellow-900"
                           title="Edit"
                           aria-label="Edit job"
@@ -309,7 +311,7 @@ const Jobs = () => {
           <button
             onClick={handleNext}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+            className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
             aria-label="Next page"
           >
             Next
@@ -317,7 +319,7 @@ const Jobs = () => {
         </div>
       </div>
 
-      {/* Improved Modal */}
+      {/* Modal */}
       {isOpen && selectedJob && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 transition-opacity duration-300"
@@ -422,7 +424,24 @@ const Jobs = () => {
                 </div>
               </div>
 
-             
+              {/* Footer */}
+              {/* <div className="p-6 border-t border-gray-200 bg-gray-50 flex justify-end">
+                <button
+                  onClick={() => navigate(`/jobs/edit/${selectedJob._id}`, { state: selectedJob })}
+                  className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  aria-label="Edit job"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828L7 15.828H4v-3.172l9.586-9.586z" />
+                  </svg>
+                  Edit Job
+                </button>
+              </div> */}
             </div>
           </div>
         </div>
