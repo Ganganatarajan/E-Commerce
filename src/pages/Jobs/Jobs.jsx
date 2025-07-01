@@ -243,7 +243,7 @@ const Jobs = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => navigate(`/jobs/edit/${item._id}`)}
+                          onClick={() => navigate(`/jobs/${item._id}`)}
                           className="text-yellow-600 hover:text-yellow-900"
                           title="Edit"
                           aria-label="Edit job"
