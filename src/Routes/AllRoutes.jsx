@@ -51,7 +51,7 @@ const AllRoutes = () => {
         <Route path="User" element={<User />} />
         <Route path="SkilledDirectors" element={<SkilledDirectors />} />
         <Route path="skilldirectory/add" element={<SkillDirectoryForm />} />
-        <Route path="skilledDirectors/:id" element={<SkillDirectoryForm />} />
+        <Route path="skilldirectory/:id" element={<SkillDirectoryForm />} />
         <Route path="jobs" element={<JobsTable />} />
         <Route path="jobs/add" element={<JobForm />} />
         <Route path="jobs/:id" element={<JobForm />} />

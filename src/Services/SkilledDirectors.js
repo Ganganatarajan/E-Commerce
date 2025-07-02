@@ -1,19 +1,16 @@
 import apiInstance from "../interceptors/axios";
 import { message } from "antd";
 
-export const createDirectors = async (data) => {
+export const createDirectors = async (formData) => {
   try {
-    const res = await apiInstance.post("/skilldirectory/createskill", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const res = await apiInstance.post("/skilldirectory/createskill", formData, {
     });
 
-    message.success("Job created successfully!");
+    message.success("Director created successfully!");
     return res.data;
   } catch (err) {
-    console.error("skilldirectory Create Error:", err.response?.data || err);
-    message.error("skilldirectory creation failed.");
+    console.error("Director Create Error:", err.response?.data || err);
+    message.error("Director creation failed.");
     throw err;
   }
 };
@@ -23,8 +20,8 @@ export const getAllDirectors = async () => {
     const response = await apiInstance.get("/skilldirectory/getall");
     return response.data;
   } catch (err) {
-    console.error("Get All skilldirectory Error:", err.response?.data || err);
-    message.error("Failed to fetch skilldirectory.");
+    console.error("Get All Directors Error:", err.response?.data || err);
+    message.error("Failed to fetch directors.");
     throw err;
   }
 };
@@ -34,25 +31,23 @@ export const getDirectorsById = async (id) => {
     const res = await apiInstance.get(`/skilldirectory/get/${id}`);
     return res.data;
   } catch (err) {
-    console.error("Get skilldirectory By ID Error:", err.response?.data || err);
-    message.error("Failed to fetch skilldirectory.");
+    console.error("Get Director By ID Error:", err.response?.data || err);
+    message.error("Failed to fetch director.");
     throw err;
   }
 };
 
-export const updateDirectors = async (id, data) => {
+export const updateDirectors = async (id, formData) => {
   try {
-    const res = await apiInstance.put(`/skilldirectory/update/${id}`, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const res = await apiInstance.put(`/skilldirectory/update/${id}`, formData, {
+      
     });
 
-    message.success("skilldirectory updated successfully!");
+    message.success("Director updated successfully!");
     return res.data;
   } catch (err) {
-    console.error("skilldirectory Update Error:", err.response?.data || err);
-    message.error("skilldirectory update failed.");
+    console.error("Director Update Error:", err.response?.data || err);
+    message.error("Director update failed.");
     throw err;
   }
 };
@@ -60,11 +55,11 @@ export const updateDirectors = async (id, data) => {
 export const deleteDirectors = async (id) => {
   try {
     const res = await apiInstance.delete(`/skilldirectory/delete/${id}`);
-    message.success("skilldirectory deleted successfully!");
+    message.success("Director deleted successfully!");
     return res.data;
   } catch (err) {
-    console.error("skilldirectory Delete Error:", err.response?.data || err);
-    message.error("skilldirectory deletion failed.");
+    console.error("Director Delete Error:", err.response?.data || err);
+    message.error("Director deletion failed.");
     throw err;
   }
 };

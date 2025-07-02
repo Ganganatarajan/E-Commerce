@@ -15,34 +15,59 @@ const SkillDirectoryForm = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    profileImage: "",
+    profileImage: null,
     phoneNo: "",
     mailId: "",
     password: "",
     workType: [],
   });
 
-  useEffect(() => {
-    const fetchDirectorData = async () => {
-      if (isEditMode) {
-        try {
-          const director = await getDirectorsById(id);
-          setFormData({
-            name: director.name || "",
-            profileImage: director.profileImage || "",
-            phoneNo: director.phoneNo || "",
-            mailId: director.mailId || "",
-            password: director.password || "",
-            workType: director.workType || [],
-          });
-        } catch (err) {
-          message.error("Failed to fetch director data");
-        }
-      }
-    };
+  const [previewImage, setPreviewImage] = useState("");
 
-    fetchDirectorData();
-  }, [isEditMode, id]);
+  // useEffect(() => {
+  //   const fetchDirectorData = async () => {
+  //     if (isEditMode) {
+  //       try {
+  //         const director = await getDirectorsById(id);
+  //         setFormData({
+  //           name: director.name || "",
+  //           profileImage: null, // We'll handle existing image separately
+  //           phoneNo: director.phoneNo || "",
+  //           mailId: director.mailId || "",
+  //           password: director.password || "",
+  //           workType: director.workType || [],
+  //         });
+  //         if (director.profileImage) {
+  //           setPreviewImage(director.profileImage);
+  //         }
+  //       } catch (err) {
+  //         message.error("Failed to fetch director data");
+  //       }
+  //     }
+  //   };
+
+  //   fetchDirectorData();
+  // }, [isEditMode, id]);
+
+ useEffect(() => {
+  if (isEditMode && location.state) {
+    const { name, profileImage, phoneNo, mailId, password, workType } = location.state;
+    
+    setFormData({
+      name: name || "",
+      profileImage: null, // We'll handle the existing image separately
+      phoneNo: phoneNo || "",
+      mailId: mailId || "",
+      password: password || "",
+      workType: workType || [],
+    });
+
+    // Set preview image if it exists
+    if (profileImage) {
+      setPreviewImage(profileImage);
+    }
+  }
+}, [isEditMode, location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +75,23 @@ const SkillDirectoryForm = () => {
       ...formData,
       [name]: value,
     });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({
+        ...formData,
+        profileImage: file
+      });
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleWorkTypeChange = (e) => {
@@ -67,33 +109,60 @@ const SkillDirectoryForm = () => {
       workType: updatedWorkTypes
     });
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (isEditMode) {
-        await updateDirectors(id, formData);
-        message.success("Director updated successfully!");
-      } else {
-        await createDirectors(formData);
-        message.success("Director created successfully!");
-      }
-      navigate("/skill-directory");
-    } catch (err) {
-      console.error(isEditMode ? "Update Error:" : "Create Error:", err);
-      message.error(isEditMode ? "Failed to update director." : "Failed to create director.");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    // Create FormData object for binary file upload
+    const formDataToSend = new FormData();
+    
+    // Append all fields in the required order
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('phoneNo', formData.phoneNo);
+    formDataToSend.append('mailId', formData.mailId);
+    formDataToSend.append('password', formData.password);
+    
+    // Append workType as array (multiple entries)
+    formData.workType.forEach(type => {
+      formDataToSend.append('workType', type);
+    });
+    
+    // Append profile image as binary data if it exists
+    if (formData.profileImage instanceof File) {
+      formDataToSend.append('profileImage', formData.profileImage);
+    } else if (isEditMode && !formData.profileImage && previewImage) {
+      // Handle case when editing but not changing the existing image
+      formDataToSend.append('profileImage', previewImage);
     }
-  };
+
+    if (isEditMode) {
+      await updateDirectors(id, formDataToSend);
+      message.success("Director updated successfully!");
+    } else {
+      await createDirectors(formDataToSend);
+      message.success("Director created successfully!");
+    }
+    navigate("/SkilledDirectors");
+  } catch (err) {
+    console.error("Submission Error:", err);
+    message.error(
+      isEditMode ? "Failed to update director." : "Failed to create director."
+    );
+  }
+};
 
   const handleReset = () => {
     setFormData({
       name: "",
-      profileImage: "",
+      profileImage: null,
       phoneNo: "",
       mailId: "",
       password: "",
       workType: [],
     });
+    setPreviewImage("");
+    // Reset file input if exists
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) fileInput.value = "";
   };
 
   const workTypeOptions = [
@@ -109,7 +178,7 @@ const SkillDirectoryForm = () => {
       <div className="mx-auto">
         <div className="flex items-center mb-8 mt-2">
           <button
-            onClick={() => navigate("/skill-directory")}
+            onClick={() => navigate("/skilldirectory")}
             className="mr-4 text-gray-600 hover:text-gray-900"
           >
             <svg
@@ -135,6 +204,7 @@ const SkillDirectoryForm = () => {
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-xl shadow-md p-6"
+          encType="multipart/form-data"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
@@ -152,15 +222,24 @@ const SkillDirectoryForm = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Profile Image URL
+                Profile Image
               </label>
               <input
-                type="text"
+                type="file"
                 name="profileImage"
-                value={formData.profileImage}
-                onChange={handleChange}
+                onChange={handleImageChange}
+                accept="image/*"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
+              {previewImage && (
+                <div className="mt-2">
+                  <img 
+                    src={previewImage} 
+                    alt="Preview" 
+                    className="h-20 w-20 object-cover rounded"
+                  />
+                </div>
+              )}
             </div>
           </div>
 

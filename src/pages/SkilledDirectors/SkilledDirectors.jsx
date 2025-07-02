@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   getAllDirectors, 
@@ -6,6 +6,8 @@ import {
   updateDirectors 
 } from '../../Services/SkilledDirectors';
 import { message } from 'antd';
+import { FaEnvelope, FaImage, FaPhone, FaTimes, FaUser } from 'react-icons/fa';
+import { FaUpwork } from 'react-icons/fa6';
 
 const SkilledDirectors = () => {
   const navigate = useNavigate();
@@ -14,6 +16,44 @@ const SkilledDirectors = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [directors, setDirectors] = useState([]);
   const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedskill, setSelectedskill] = useState(null);
+  
+    const modalRef = useRef(null);
+  
+    const openModal = (skillId) => {
+      const skill = directors.find((j) => j._id === skillId?.toString());
+      setSelectedskill(skill);
+      setIsOpen(true);
+    };
+  
+    const closeModal = () => {
+      setIsOpen(false);
+      setSelectedskill(null);
+    };
+  
+useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        closeModal();
+      }
+    };
+    const handleEscape = (e) => {
+      if (e.key === "Escape") closeModal();
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     fetchDirectors();
@@ -87,9 +127,9 @@ const SkilledDirectors = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/skilldirectory/edit/${id}`);
-  };
+  // const handleEdit = (id) => {
+  //   navigate(`skilldirectory/${id}`);
+  // };
 
   const handleView = (id) => {
     navigate(`/skill-directory/view/${id}`);
@@ -184,8 +224,8 @@ const SkilledDirectors = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button 
-                            onClick={() => handleView(director._id)}
-                            className="text-blue-600 hover:text-blue-900"
+onClick={() => openModal(director._id)}                            
+className="text-blue-600 hover:text-blue-900"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -193,7 +233,10 @@ const SkilledDirectors = () => {
                             </svg>
                           </button>
                           <button 
-                            onClick={() => handleEdit(director._id)}
+                            // onClick={() => handleEdit(director._id)}
+                               onClick={() =>
+                            navigate(`/skilldirectory/${director._id}`, { state: director })
+                          }
                             className="text-yellow-600 hover:text-yellow-900"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -264,6 +307,92 @@ const SkilledDirectors = () => {
           </button>
         </div>
       )}
+
+      {isOpen && selectedskill && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 transition-opacity duration-300"
+                role="dialog"
+                aria-labelledby="job-modal-title"
+                aria-modal="true"
+              >
+                <div
+                  ref={modalRef}
+                  className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100 hover:scale-[1.01]"
+                >
+                  <div className="flex flex-col h-full">
+                    {/* Header */}
+                    <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
+                      <h2
+                        id="job-modal-title"
+                        className="text-2xl font-bold text-gray-900"
+                      >
+                        {selectedskill.name}
+                      </h2>
+                      <button
+                        onClick={closeModal}
+                        className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                        aria-label="Close modal"
+                      >
+                        <FaTimes size={20} />
+                      </button>
+                    </div>
+      
+          
+                    <div className="grid grid-cols-1 gap-8 p-5">
+                                      {/* Job Details */}
+                                      <div className="space-y-6">
+  <div>
+    <h3 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-2 mb-3">
+      skillDirectory Details
+    </h3>
+    <div className="space-y-4">
+      {/* Profile Image Field */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3">
+          {selectedskill.profileImage ? (
+            <img 
+              src={selectedskill.profileImage} 
+              alt="Profile" 
+              className="w-12 h-12 rounded-full object-contain border border-gray-200"
+            />
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+              <FaUser className="text-gray-400" />
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Existing fields */}
+      <div className="flex items-center gap-3">
+        <FaUser className="text-indigo-600 w-5 h-5" />
+        <p className="text-gray-600">
+          <span className="font-medium">Phone no:</span>{" "}
+          {selectedskill.phoneNo || "N/A"}
+        </p>
+      </div>
+      <div className="flex items-center gap-3">
+        <FaEnvelope className="text-indigo-600 w-5 h-5" />
+        <p className="text-gray-600">
+          <span className="font-medium">Email:</span>{" "}
+          {selectedskill.mailId || "N/A"}
+        </p>
+      </div>
+      <div className="flex items-center gap-3">
+        <FaUpwork className="text-indigo-600 w-5 h-5" />
+        <p className="text-gray-600">
+          <span className="font-medium">WorkType:</span>{" "}
+          {selectedskill.workType?.join(', ') || "N/A"}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+                                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
     </div>
   );
 };
