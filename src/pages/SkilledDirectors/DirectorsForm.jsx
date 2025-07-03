@@ -178,7 +178,7 @@ const handleSubmit = async (e) => {
       <div className="mx-auto">
         <div className="flex items-center mb-8 mt-2">
           <button
-            onClick={() => navigate("/skilldirectory")}
+            onClick={() => navigate("/SkilledDirectors")}
             className="mr-4 text-gray-600 hover:text-gray-900"
           >
             <svg
