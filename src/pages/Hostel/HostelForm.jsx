@@ -17,6 +17,8 @@ const amenitiesList = [
   "Cleaning",
 ];
 
+const roomTypes = ["Classic", "Deluxe", "Premium", "Standard"];
+
 const HostelForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -33,6 +35,11 @@ const HostelForm = () => {
     locationLink: "",
     hostelImages: [],
     amenities: [],
+    slotAvailability: roomTypes.map(type => ({
+      type,
+      ac: { available: false, count: 0 },
+      nonAc: { available: false, count: 0 }
+    }))
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -60,6 +67,24 @@ const HostelForm = () => {
     }
   };
 
+  const handleRoomAvailabilityChange = (index, field, subField, value) => {
+    const updatedAvailability = [...formData.slotAvailability];
+    
+    if (subField) {
+      updatedAvailability[index][field][subField] = 
+        field === 'type' ? value : 
+        subField === 'count' ? parseInt(value) || 0 : 
+        value;
+    } else {
+      updatedAvailability[index][field] = value;
+    }
+    
+    setFormData({
+      ...formData,
+      slotAvailability: updatedAvailability
+    });
+  };
+
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files).slice(0, 5);
     setFormData({
@@ -71,18 +96,41 @@ const HostelForm = () => {
     setImagePreviews(previews);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await createHostel(formData);
-      console.log("Form submitted:", res);
-      message.success("Hostel created successfully!");
-      navigate("/hostel"); // Redirect only if API success
-    } catch (err) {
-      console.error("Create Hostel Error:", err);
-      message.error("Failed to create hostel.");
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    // Prepare form data for submission
+    const submissionData = {
+      ...formData,
+      // Convert hostelImages from File objects to base64 strings if needed
+      // Or you might want to upload them separately first
+      hostelImages: formData.hostelImages.map(file => file.name), // temporary, adjust based on your upload logic
+      // Ensure roomAvailability is properly formatted
+      slotAvailability: formData.slotAvailability
+        .filter(room => room.roomTypes) // filter out empty types
+        .map(room => ({
+          type: room.roomTypes,
+          ac: {
+            available: room.ac.available,
+            count: room.ac.available ? room.ac.count : 0
+          },
+          nonAc: {
+            available: room.nonAc.available,
+            count: room.nonAc.available ? room.nonAc.count : 0
+          }
+        }))
+    };
+
+    const res = await createHostel(submissionData);
+    console.log("Form submitted:", res);
+    message.success("Hostel created successfully!");
+    navigate("/hostel");
+  } catch (err) {
+    console.error("Create Hostel Error:", err);
+    message.error("Failed to create hostel.");
+  }
+};
+
 
   const handleReset = () => {
     setFormData({
@@ -96,16 +144,21 @@ const HostelForm = () => {
       city: "",
       area: "",
       pincode: "",
-      googleMapLink: "",
+      locationLink: "",
       hostelImages: [],
       amenities: [],
+      slotAvailability: roomTypes.map(type => ({
+        type,
+        ac: { available: false, count: 0 },
+        nonAc: { available: false, count: 0 }
+      }))
     });
     setImagePreviews([]);
   };
 
   return (
     <div className="container mx-auto p-2">
-      <div className=" mx-auto">
+      <div className="mx-auto">
         <div className="flex items-center mb-8 mt-2">
           <button
             onClick={() => navigate("/hostel")}
@@ -133,7 +186,7 @@ const HostelForm = () => {
           onSubmit={handleSubmit}
           className="bg-white rounded-xl shadow-md p-6"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Hostel Name
@@ -358,6 +411,127 @@ const HostelForm = () => {
             </div>
           </div>
 
+          {/* Room Availability Section */}
+          <div className="mb-8">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Room Availability</h2>
+            <div className="space-y-6">
+              {formData.slotAvailability.map((room, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Room Type
+                    </label>
+                    <input
+                      type="text"
+                      value={room.type}
+                      onChange={(e) => handleRoomAvailabilityChange(index, 'type', null, e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* AC Availability */}
+                    <div className="border border-gray-100 rounded-lg p-4 bg-gray-50">
+                      <div className="flex items-center mb-3">
+                        <input
+                          type="checkbox"
+                          checked={room.ac.available}
+                          onChange={(e) => handleRoomAvailabilityChange(index, 'ac', 'available', e.target.checked)}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <label className="ml-2 text-sm font-medium text-gray-700">
+                          AC Available
+                        </label>
+                      </div>
+                      
+                      {room.ac.available && (
+                        <div>
+                          <label className="block text-sm text-gray-700 mb-1">
+                            Number of AC Rooms
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            value={room.ac.count}
+                            onChange={(e) => handleRoomAvailabilityChange(index, 'ac', 'count', e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                            required={room.ac.available}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Non-AC Availability */}
+                    <div className="border border-gray-100 rounded-lg p-4 bg-gray-50">
+                      <div className="flex items-center mb-3">
+                        <input
+                          type="checkbox"
+                          checked={room.nonAc.available}
+                          onChange={(e) => handleRoomAvailabilityChange(index, 'nonAc', 'available', e.target.checked)}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <label className="ml-2 text-sm font-medium text-gray-700">
+                          Non-AC Available
+                        </label>
+                      </div>
+                      
+                      {room.nonAc.available && (
+                        <div>
+                          <label className="block text-sm text-gray-700 mb-1">
+                            Number of Non-AC Rooms
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            value={room.nonAc.count}
+                            onChange={(e) => handleRoomAvailabilityChange(index, 'nonAc', 'count', e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                            required={room.nonAc.available}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData({
+                    ...formData,
+                    slotAvailability: [
+                      ...formData.slotAvailability,
+                      {
+                        type: "",
+                        ac: { available: false, count: 0 },
+                        nonAc: { available: false, count: 0 }
+                      }
+                    ]
+                  });
+                }}
+                className="flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add Another Room Type
+              </button>
+            </div>
+          </div>
+
+          {/* Rest of your existing form fields (amenities, images, etc.) */}
+
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -380,3 +554,6 @@ const HostelForm = () => {
 };
 
 export default HostelForm;
+
+
+
