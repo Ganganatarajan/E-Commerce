@@ -18,6 +18,7 @@ import AdminsForm from "../pages/Admins/AdminsForm";
 import EditHotel from "../pages/Hotel/EditHotel";
 import LoginForm from "../Common/Login";
 import JobForm from "../pages/Jobs/JobsForm";
+import SkillDirectoryForm from "../pages/SkilledDirectors/DirectorsForm";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("viduthiiadmintoken");
@@ -49,9 +50,11 @@ const AllRoutes = () => {
         <Route path="hotel/add" element={<HotelForm />} />
         <Route path="User" element={<User />} />
         <Route path="SkilledDirectors" element={<SkilledDirectors />} />
+        <Route path="skilldirectory/add" element={<SkillDirectoryForm />} />
+        <Route path="skilldirectory/:id" element={<SkillDirectoryForm />} />
         <Route path="jobs" element={<JobsTable />} />
         <Route path="jobs/add" element={<JobForm />} />
-        <Route path="jobs/edit/:id" element={<JobForm />} />
+        <Route path="jobs/:id" element={<JobForm />} />
         <Route path="/hostel/get/:id" element={<EditHostelForm />} />
         <Route path="/hotel/edit/:id" element={<EditHotel />} />
         <Route path="Admins" element={<Admins />} />
