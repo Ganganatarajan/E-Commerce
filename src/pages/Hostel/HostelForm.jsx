@@ -102,14 +102,11 @@ const handleSubmit = async (e) => {
     // Prepare form data for submission
     const submissionData = {
       ...formData,
-      // Convert hostelImages from File objects to base64 strings if needed
-      // Or you might want to upload them separately first
-      hostelImages: formData.hostelImages.map(file => file.name), // temporary, adjust based on your upload logic
-      // Ensure roomAvailability is properly formatted
+      hostelImages: formData.hostelImages.map(file => file.name),
       slotAvailability: formData.slotAvailability
-        .filter(room => room.roomTypes) // filter out empty types
+        .filter(room => room.type) // filter out empty types
         .map(room => ({
-          type: room.roomTypes,
+          type: room.type,
           ac: {
             available: room.ac.available,
             count: room.ac.available ? room.ac.count : 0
@@ -121,6 +118,9 @@ const handleSubmit = async (e) => {
         }))
     };
 
+    // Log the payload before sending
+    console.log("Payload being sent:", JSON.stringify(submissionData, null, 2));
+
     const res = await createHostel(submissionData);
     console.log("Form submitted:", res);
     message.success("Hostel created successfully!");
@@ -130,7 +130,6 @@ const handleSubmit = async (e) => {
     message.error("Failed to create hostel.");
   }
 };
-
 
   const handleReset = () => {
     setFormData({
@@ -186,7 +185,7 @@ const handleSubmit = async (e) => {
           onSubmit={handleSubmit}
           className="bg-white rounded-xl shadow-md p-6"
         >
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Hostel Name
@@ -335,8 +334,8 @@ const handleSubmit = async (e) => {
             </label>
             <input
               type="url"
-              name="googleMapLink"
-              value={formData.googleMapLink}
+              name="locationLink"
+              value={formData.locationLink}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               required
@@ -530,8 +529,6 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-          {/* Rest of your existing form fields (amenities, images, etc.) */}
-
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -554,6 +551,3 @@ const handleSubmit = async (e) => {
 };
 
 export default HostelForm;
-
-
-
