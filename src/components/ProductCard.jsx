@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
       id: product._id,
       name: product.name,
       price: product.price,
-      imageUrl: product.imageUrl,
+      image: product.image,
       stock: product.stock,
     });
   };
@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
     <div className="card hover:shadow-lg transition-shadow duration-300">
       <Link to={`/products/${product._id}`}>
         <img
-          src={product.imageUrl}
+          src={product.image}
           alt={product.name}
           className="w-full h-48 object-cover"
         />

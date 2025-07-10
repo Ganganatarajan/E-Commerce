@@ -24,16 +24,17 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  const fetchProfile = async () => {
-    try {
-      const response = await api.get('/auth/me') 
-      setProfile(response.data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchProfile = async () => {
+  try {
+    const response = await api.get('/auth/me');
+    setProfile(response.data.user); // ✅ fix here
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
