@@ -5,27 +5,25 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import userRoutes from './routes/userRoute.js';
+import path from 'path'; 
 
 dotenv.config();
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
-
-// Routes
-app.use('/api/auth', authRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/auth', authRoutes); 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 
-// Health check route
+
 app.get('/health', (req, res) => {
   res.json({ message: 'Server is running!' });
 });
 
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     app.listen(PORT, () => {
