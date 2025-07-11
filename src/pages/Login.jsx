@@ -8,7 +8,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loginType, setLoginType] = useState('user'); // 'admin' or 'user'
+  const [loginType, setLoginType] = useState('user'); 
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -77,7 +77,6 @@ const Login = () => {
         </div>
 
         <div className="bg-white shadow-xl rounded-lg p-8 space-y-6">
-          {/* Login Type Selector */}
           <div className="flex gap-2">
             <button
               type="button"

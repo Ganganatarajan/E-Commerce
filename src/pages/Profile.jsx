@@ -147,8 +147,6 @@ const fetchProfile = async () => {
                 />
               </div>
             </div>
-
-            {/* Address Information */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-800 flex items-center">
                 <MapPin className="w-5 h-5 mr-2" />

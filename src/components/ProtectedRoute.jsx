@@ -14,12 +14,10 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   }
 
   if (!isAuthenticated) {
-    // Redirect to login with the attempted location
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (adminOnly && user?.role !== 'admin') {
-    // Redirect non-admin users to home page
     return <Navigate to="/" replace />;
   }
 

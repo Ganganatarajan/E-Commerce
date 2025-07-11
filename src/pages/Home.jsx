@@ -81,12 +81,10 @@ const Banner = () => {
 
   return (
     <>
-      {/* HERO BANNER */}
       <section
         id="banner"
         className="relative min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 overflow-hidden"
       >
-        {/* Floating background shapes */}
         <div className="absolute inset-0 overflow-hidden z-0">
           <div className="absolute top-12 left-10 w-24 h-24 bg-pink-100 rounded-full opacity-30 animate-float"></div>
           <div className="absolute bottom-20 right-8 w-20 h-20 bg-rose-200 rounded-full opacity-40 animate-float"></div>
@@ -95,7 +93,6 @@ const Banner = () => {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[90vh] py-10">
-            {/* Left content */}
             <div className="text-center lg:text-left animate-slide-up space-y-6">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
                 <span className="block">Discover the Best</span>
@@ -109,8 +106,6 @@ const Banner = () => {
                 and more. Quality guaranteed, with fast delivery and great
                 prices.
               </p>
-
-              {/* Features */}
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 {[
                   "🚀 Fast Worldwide Shipping",
@@ -125,8 +120,6 @@ const Banner = () => {
                   </span>
                 ))}
               </div>
-
-              {/* CTA */}
               <div>
                 <button
                   onClick={() => scrollToSection("products")}
@@ -151,8 +144,6 @@ const Banner = () => {
                 </button>
               </div>
             </div>
-
-            {/* Product image */}
             <div className="relative animate-fade-in" style={{ animationDelay: "0.5s" }}>
               <div className="relative w-80 h-80 sm:w-96 sm:h-96 mx-auto rounded-3xl bg-gradient-to-br from-pink-100 to-rose-200 shadow-xl overflow-hidden">
                 <img
@@ -162,8 +153,6 @@ const Banner = () => {
                   loading="lazy"
                 />
               </div>
-
-              {/* Floating stats */}
               <div className="absolute top-4 right-6 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow animate-float">
                 <div className="text-xl font-bold text-pink-600">4.9★</div>
                 <div className="text-xs text-gray-600">Top Rated</div>
@@ -180,8 +169,6 @@ const Banner = () => {
           </div>
         </div>
       </section>
-
-      {/* ENHANCED PRODUCT SECTION */}
       <section id="products" className="relative bg-gradient-to-b from-gray-100 to-gray-200 py-16 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -251,8 +238,6 @@ const Banner = () => {
           </div>
         </div>
       </section>
-
-      {/* NEW PARALLAX SECTION */}
       <section className="relative py-20 bg-gray-900 text-white overflow-hidden">
         <div className="absolute inset-0">
           <img 
@@ -392,8 +377,6 @@ const Banner = () => {
     </div>
   </div>
 </section>
-
-      {/* WHY US SECTION */}
       <section className="py-20 bg-rose-50 px-6" id="why-us">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12">

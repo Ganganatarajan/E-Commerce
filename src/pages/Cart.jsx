@@ -9,10 +9,7 @@ const Cart = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const handleCheckout = () => {
-    // Simulate payment processing
     setShowPaymentModal(true);
-    
-    // Simulate successful payment after 2 seconds
     setTimeout(() => {
       setPaymentSuccess(true);
     }, 2000);

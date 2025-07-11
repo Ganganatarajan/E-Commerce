@@ -78,7 +78,6 @@ const ProductDetail = () => {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Product Image */}
         <div className="space-y-4">
           <img
             src={product.imageUrl}
@@ -86,16 +85,12 @@ const ProductDetail = () => {
             className="w-full h-96 object-cover rounded-lg shadow-md"
           />
         </div>
-
-        {/* Product Info */}
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
             <p className="text-lg text-gray-600 mt-2">{product.brand}</p>
             <p className="text-sm text-gray-500 capitalize">{product.category}</p>
           </div>
-
-          {/* Rating */}
           <div className="flex items-center space-x-2">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
@@ -113,19 +108,13 @@ const ProductDetail = () => {
               {product.rating} ({product.numReviews} reviews)
             </span>
           </div>
-
-          {/* Price */}
           <div className="text-3xl font-bold text-primary-600">
             ${product.price}
           </div>
-
-          {/* Description */}
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">Description</h3>
             <p className="text-gray-600 leading-relaxed">{product.description}</p>
           </div>
-
-          {/* Stock Status */}
           <div>
             {product.stock > 0 ? (
               <p className="text-green-600 font-medium">
@@ -135,8 +124,6 @@ const ProductDetail = () => {
               <p className="text-red-600 font-medium">Out of Stock</p>
             )}
           </div>
-
-          {/* Quantity and Add to Cart */}
           {product.stock > 0 && (
             <div className="space-y-4">
               <div className="flex items-center space-x-4">

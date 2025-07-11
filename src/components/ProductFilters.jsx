@@ -33,7 +33,6 @@ const ProductFilters = ({ filters, onFilterChange, categories = [] }) => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
           <input
@@ -45,8 +44,6 @@ const ProductFilters = ({ filters, onFilterChange, categories = [] }) => {
             className="input-field pl-10"
           />
         </div>
-        
-        {/* Category */}
         <select
           name="category"
           value={filters.category}
@@ -60,8 +57,6 @@ const ProductFilters = ({ filters, onFilterChange, categories = [] }) => {
             </option>
           ))}
         </select>
-        
-        {/* Price Range */}
         <div className="flex space-x-2">
           <input
             type="number"
@@ -80,8 +75,6 @@ const ProductFilters = ({ filters, onFilterChange, categories = [] }) => {
             className="input-field"
           />
         </div>
-        
-        {/* Sort */}
         <select
           name="sortBy"
           value={`${filters.sortBy}-${filters.sortOrder}`}

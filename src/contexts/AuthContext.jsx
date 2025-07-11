@@ -25,13 +25,11 @@ export const AuthProvider = ({ children }) => {
       if (AuthService.isAuthenticated()) {
         const storedUser = AuthService.getUser();
         if (storedUser) {
-          // Verify token is still valid
           const result = await AuthService.getCurrentUser();
           if (result.success) {
             setUser(result.user);
             setIsAuthenticated(true);
           } else {
-            // Token is invalid, clear storage
             AuthService.logout();
           }
         }

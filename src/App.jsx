@@ -15,17 +15,12 @@ import CheckoutSuccess from './pages/CheckOut';
 import ProtectedRoute from './components/ProtectedRoute';
 import Footer from './components/Footer';
 import './App.css';
-
-// Create a new component to handle the root redirect
 const RootRedirect = () => {
   const { user } = useAuth();
-  
-  // If user is admin, redirect to admin dashboard
+
   if (user?.role === 'admin') {
     return <Navigate to="/admin" replace />;
   }
-  
-  // Otherwise, go to home page
   return <Navigate to="/home" replace />;
 };
 
@@ -38,17 +33,12 @@ function App() {
             <Navbar />
             <main className="flex-grow">
               <Routes>
-                {/* Root path with conditional redirect */}
                 <Route path="/" element={<RootRedirect />} />
-                
-                {/* Public Routes */}
                 <Route path="/home" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-
-                {/* Protected User Routes */}
                 <Route 
                   path="/cart" 
                   element={
@@ -73,8 +63,6 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-
-                {/* Admin Only Routes */}
                 <Route 
                   path="/admin" 
                   element={
@@ -107,8 +95,6 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-
-                {/* Catch all route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
@@ -120,7 +106,6 @@ function App() {
   );
 }
 
-// NotFound Component
 const NotFound = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
     <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
@@ -129,7 +114,6 @@ const NotFound = () => (
   </div>
 );
 
-// UserForm Component placeholder
 const UserForm = () => (
   <div className="container mx-auto px-4 py-8">
     <h1 className="text-2xl font-bold mb-6">Edit User</h1>

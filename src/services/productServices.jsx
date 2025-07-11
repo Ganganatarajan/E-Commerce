@@ -1,7 +1,6 @@
 import api from './api';
 
 class ProductService {
-  // Get all products with filters
   async getAllProducts(filters = {}) {
     try {
       const params = new URLSearchParams();
@@ -23,7 +22,6 @@ class ProductService {
     }
   }
 
-  // Get single product
   async getProduct(id) {
     try {
       const response = await api.get(`/products/${id}`);
@@ -39,7 +37,6 @@ class ProductService {
     }
   }
 
-  // Create new product (admin only)
   async createProduct(productData) {
     try {
       const response = await api.post('/products', productData);
@@ -55,7 +52,6 @@ class ProductService {
     }
   }
 
-  // Update product (admin only)
   async updateProduct(id, productData) {
     try {
       const response = await api.put(`/products/${id}`, productData);
@@ -71,7 +67,6 @@ class ProductService {
     }
   }
 
-  // Delete product (admin only)
   async deleteProduct(id) {
     try {
       await api.delete(`/products/${id}`);
@@ -86,7 +81,6 @@ class ProductService {
     }
   }
 
-  // Get categories
   async getCategories() {
     try {
       const response = await api.get('/products/categories/list');

@@ -42,7 +42,7 @@ const Register = () => {
     const result = await register(formData.name, formData.email, formData.password);
     
  if (result.success) {
-  navigate('/login'); // Redirect to login instead
+  navigate('/login');
 } else {
   setError(result.error);
 }
